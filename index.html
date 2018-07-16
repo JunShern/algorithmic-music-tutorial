@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="//toolness.github.io/p5.js-widget/p5-widget.js"></script>
+<link rel="stylesheet" href="w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/solid.css" integrity="sha384-TbilV5Lbhlwdyc4RuIV/JhD8NR+BfMrvz4BL5QFa2we1hQu6wvREr3v6XSRfCTRp" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/fontawesome.css" integrity="sha384-ozJwkrqb90Oa3ZNb+yKFW2lToAWYdTiF1vt8JiH5ptTGHTGcN7qdoR1F95e0kYyG" crossorigin="anonymous">
+<link rel="stylesheet" href="style.css">
+
+<body class="w3-white">
+
+<!-- Icon Bar (Sidebar - hidden on small screens) -->
+<nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
+  <!-- Avatar image in top left corner -->
+  <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+    <i class="fa fa-angle-up w3-xxlarge"></i>
+  </a>
+  <a href="#motivation" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+    <i class="fa fa-fire w3-xxlarge"></i>
+  </a>
+  <a href="#building-blocks" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+    <i class="fa fa-circle w3-xxlarge"></i>
+  </a>
+  <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+    <i class="fa fa-ellipsis-h w3-xxlarge"></i>
+  </a>
+  <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+    <i class="fa fa-th w3-xxlarge"></i>
+  </a>
+  <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+    <i class="fa fa-vector-square w3-xxlarge"></i>
+  </a>
+  <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+    <i class="fa fa-share-alt w3-xxlarge"></i>
+  </a>
+  <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+    <i class="fa fa-braille w3-xxlarge"></i>
+  </a>
+</nav>
+
+<!-- Navbar on small screens (Hidden on medium and large screens) -->
+<div class="w3-top w3-hide-large w3-hide-medium" id="myNavbar">
+  <div class="w3-bar w3-white w3-opacity w3-hover-opacity-off w3-center w3-small">
+    <a href="#" class="w3-bar-item w3-button" style="width:25% !important">HOME</a>
+    <a href="#about" class="w3-bar-item w3-button" style="width:25% !important">ABOUT</a>
+    <a href="#photos" class="w3-bar-item w3-button" style="width:25% !important">PHOTOS</a>
+    <a href="#contact" class="w3-bar-item w3-button" style="width:25% !important">CONTACT</a>
+  </div>
+</div>
+
+<!-- Page Content -->
+<div class="w3-padding-large" id="main">
+  <!-- Header/Home -->
+  <header class="w3-container w3-padding-32 w3-center w3-white" id="home">
+    <h1 class="w3-jumbo"><span class="w3-hide-small">Algorithmic Composition</h1>
+    <p>Computers composing compositions.</p>
+    <img src="/w3images/man_smoke.jpg" alt="boy" class="w3-image" width="992" height="1108">
+  </header>
+
+    
+  <!-- About Section -->
+  <div class="w3-content w3-justify w3-text-grey w3-padding-64" id="motivation">
+    <h2 class="w3-text-dark-grey">Motivation</h2>
+    <hr style="width:200px" class="w3-opacity">
+    <p>Music is a beautiful, constantly evolving field of art. Computer programs provide us with new tools for both the creation and consumption of music, and in particular we can do this easily using p5.js, through the p5.js-sound add-on library!</p>
+    <p>In this tutorial, we will walk through the basics of creating p5 sketches for algorithmic composition and interactive music. For a fun teaser of what is possible, see the sketch below!</p>
+
+<script type="text/p5">
+function setup() {
+    createCanvas(100, 100);
+}
+
+function draw() {
+    background(255, 0, 200);
+}
+</script>
+
+    <p>Excited to get started? Let’s dive right into it.</p>
+
+  <!-- Portfolio Section -->
+  <div class="w3-padding-64 w3-content" id="building-blocks">
+    <h2 class="w3-text-dark-grey">The Building Blocks of Music</h2>
+    <hr style="width:200px" class="w3-opacity">
+
+<p>This is a note.</p>
+
+<script type="text/p5">
+// Sketch - Note
+function setup() {
+    createCanvas(100, 100);
+}
+
+function draw() {
+    background(255, 0, 200);
+}
+</script>
+
+<p>Notes are characterized by their pitch, velocity and timing information.</p>
+ 
+<p>Musical pitch refers to how high- or low-pitched the note sounds. This characteristic comes from the oscillating frequency of the sound wave producing that note.</p>
+ 
+<p>Frequency is a continuous value, which means that 440Hz and 440.00001Hz are both equally valid, and there are an infinite number of possible pitch frequencies. However, Western music typically restricts itself to a particular subset of standard pitch frequencies, and we give names to these standard frequencies such as “A3”, “C5”, “F#4” and so on.</p>
+ 
+<p>Pitch names like “D#4” may be familiar to you depending on how comfortable you are with music theory, but if you don’t know your sharps from your flats, fret not! There is an alternate naming scheme called MIDI note numbers, which simply labels each standard frequency with a number which increases as the pitch gets higher. Easy, right?</p>
+ 
+<script type="text/p5">
+// Sketch - MIDI note numbers
+function setup() {
+    createCanvas(100, 100);
+}
+
+function draw() {
+    background(255, 0, 200);
+}
+</script>
+ 
+<p>The velocity of a note indicates how hard a note is struck. Primarily, this influences how loud the note is played, but depending on the implementation of your synthesizer’s instrument voice, velocity may also have an effect on timbre and other sound characteristics. For the purpose of this tutorial, we can simply think of velocity as the same thing as volume.</p>
+
+<script type="text/p5">
+// Sketch - Velocity
+function setup() {
+    createCanvas(100, 100);
+}
+
+function draw() {
+    background(255, 0, 200);
+}
+</script>
+
+<p>The last bit, timing information, needs to include both the attack and release times for that particular note (which can equivalently be represented as onset time and duration). This timing information can be expressed in terms of seconds or in musical time, which uses fractions relative to a composer-defined beats per minute (BPM).</p>
+
+<p>Now, if we take a sequence of notes, we get a song. In the example below, feel free to add/remove notes and play around with the note parameters to see how the song changes!</p>
+
+<script type="text/p5">
+// Sketch - Note Array
+function setup() {
+    createCanvas(100, 100);
+}
+
+function draw() {
+    background(255, 0, 200);
+}
+</script>
+
+<p>Using an array of notes like the one above, we can manually compose music and ask p5.js to play it back for us. That’s great, but in the realm of computers and interactive programs, we can do so much more! </p>
+
+    <!-- Grid for photos -->
+    <div class="w3-row-padding" style="margin:0 -16px">
+      <div class="w3-half">
+        <img src="/w3images/wedding.jpg" style="width:100%">
+        <img src="/w3images/rocks.jpg" style="width:100%">
+        <img src="/w3images/sailboat.jpg" style="width:100%">
+      </div>
+
+      <div class="w3-half">
+        <img src="/w3images/underwater.jpg" style="width:100%">
+        <img src="/w3images/chef.jpg" style="width:100%">
+        <img src="/w3images/wedding.jpg" style="width:100%">
+        <img src="/w3images/p6.jpg" style="width:100%">
+      </div>
+    <!-- End photo grid -->
+    </div>
+  <!-- End Portfolio Section -->
+  </div>
+
+  <!-- Contact Section -->
+  <div class="w3-padding-64 w3-content w3-text-black" id="contact">
+    <h2 class="w3-text-dark-grey">Contact Me</h2>
+    <hr style="width:200px" class="w3-opacity">
+
+    <div class="w3-section">
+      <p><i class="fa fa-map-marker fa-fw w3-text-black w3-xxlarge w3-margin-right"></i> Chicago, US</p>
+      <p><i class="fa fa-phone fa-fw w3-text-black w3-xxlarge w3-margin-right"></i> Phone: +00 151515</p>
+      <p><i class="fa fa-envelope fa-fw w3-text-black w3-xxlarge w3-margin-right"> </i> Email: mail@mail.com</p>
+    </div><br>
+    <p>Lets get in touch. Send me a message:</p>
+
+    <form action="/action_page.php" target="_blank">
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Name" required name="Name"></p>
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Email" required name="Email"></p>
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Subject" required name="Subject"></p>
+      <p><input class="w3-input w3-padding-16" type="text" placeholder="Message" required name="Message"></p>
+      <p>
+        <button class="w3-button w3-light-grey w3-padding-large" type="submit">
+          <i class="fa fa-paper-plane"></i> SEND MESSAGE
+        </button>
+      </p>
+    </form>
+  <!-- End Contact Section -->
+  </div>
+  
+    <!-- Footer -->
+  <footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
+    <i class="fa fa-github w3-hover-opacity"></i>
+    <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+  <!-- End footer -->
+  </footer>
+
+<!-- END PAGE CONTENT -->
+</div>
+
+</body>
+</html>
