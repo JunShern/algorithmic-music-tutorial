@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<title>W3.CSS Template</title>
+<title>Algorithmic Composition</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="//toolness.github.io/p5.js-widget/p5-widget.js"></script>
@@ -13,120 +13,123 @@
 <body class="w3-white">
 
 <!-- Icon Bar (Sidebar - hidden on small screens) -->
-<nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
-  <!-- Avatar image in top left corner -->
-  <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-    <i class="fa fa-angle-up w3-xxlarge"></i>
-  </a>
-  <a href="#motivation" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-    <i class="fa fa-fire w3-xxlarge"></i>
-  </a>
-  <a href="#building-blocks" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-    <i class="fa fa-circle w3-xxlarge"></i>
-  </a>
-  <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-    <i class="fa fa-ellipsis-h w3-xxlarge"></i>
-  </a>
-  <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-    <i class="fa fa-th w3-xxlarge"></i>
-  </a>
-  <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-    <i class="fa fa-vector-square w3-xxlarge"></i>
-  </a>
-  <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-    <i class="fa fa-share-alt w3-xxlarge"></i>
-  </a>
-  <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-    <i class="fa fa-braille w3-xxlarge"></i>
-  </a>
-</nav>
+<!-- <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
+    <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+        <i class="fa fa-angle-up w3-xxlarge"></i>
+    </a>
+    <a href="#motivation" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+        <i class="fa fa-fire w3-xxlarge"></i>
+    </a>
+    <a href="#building-blocks" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+        <i class="fa fa-circle w3-xxlarge"></i>
+    </a>
+    <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+        <i class="fa fa-ellipsis-h w3-xxlarge"></i>
+    </a>
+    <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+        <i class="fa fa-th w3-xxlarge"></i>
+    </a>
+    <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+        <i class="fa fa-vector-square w3-xxlarge"></i>
+    </a>
+    <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+        <i class="fa fa-share-alt w3-xxlarge"></i>
+    </a>
+    <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
+        <i class="fa fa-braille w3-xxlarge"></i>
+    </a>
+</nav> -->
 
 <!-- Navbar on small screens (Hidden on medium and large screens) -->
 <div class="w3-top w3-hide-large w3-hide-medium" id="myNavbar">
-  <div class="w3-bar w3-white w3-opacity w3-hover-opacity-off w3-center w3-small">
-    <a href="#" class="w3-bar-item w3-button" style="width:25% !important">HOME</a>
-    <a href="#about" class="w3-bar-item w3-button" style="width:25% !important">ABOUT</a>
-    <a href="#photos" class="w3-bar-item w3-button" style="width:25% !important">PHOTOS</a>
-    <a href="#contact" class="w3-bar-item w3-button" style="width:25% !important">CONTACT</a>
-  </div>
+    <div class="w3-bar w3-white w3-opacity w3-hover-opacity-off w3-center w3-small">
+        <a href="#" class="w3-bar-item w3-button" style="width:25% !important">HOME</a>
+        <a href="#about" class="w3-bar-item w3-button" style="width:25% !important">ABOUT</a>
+        <a href="#photos" class="w3-bar-item w3-button" style="width:25% !important">PHOTOS</a>
+        <a href="#contact" class="w3-bar-item w3-button" style="width:25% !important">CONTACT</a>
+    </div>
 </div>
 
 <!-- Page Content -->
 <div class="w3-padding-large" id="main">
-  <!-- Header/Home -->
-  <header class="w3-container w3-padding-32 w3-center w3-white" id="home">
-    <h1 class="w3-jumbo"><span class="w3-hide-small">Algorithmic Composition</h1>
-    <p>Computers composing compositions.</p>
-    <img src="/w3images/man_smoke.jpg" alt="boy" class="w3-image" width="992" height="1108">
-  </header>
+<!-- Header/Home -->
+<header class="w3-container w3-center w3-white" id="home">
+    <div class="banner-container">
+        <iframe src="sketches/title/index.html" class="banner-iframe"></iframe>
+        <div class="banner-text">
+            <h1 class="w3-jumbo"><span class="w3-hide-small">Algorithmic Composition</h1>
+            <p>An interactive and explorable tutorial on algorithmic music composition with p5.js-sound.</p>
+        </div>
+    </div>
+</header>
 
-    
-  <!-- About Section -->
-  <div class="w3-content w3-justify w3-text-grey w3-padding-64" id="motivation">
-    <h2 class="w3-text-dark-grey">Motivation</h2>
-    <hr style="width:200px" class="w3-opacity">
-    <p>Music is a beautiful, constantly evolving field of art. Computer programs provide us with new tools for both the creation and consumption of music, and in particular we can do this easily using p5.js, through the p5.js-sound add-on library!</p>
-    <p>In this tutorial, we will walk through the basics of creating p5 sketches for algorithmic composition and interactive music. For a fun teaser of what is possible, see the sketch below!</p>
+
+<!-- About Section -->
+<div class="w3-content w3-justify w3-text-grey w3-padding-64" id="motivation">
+<h2 class="w3-text-dark-grey">Motivation</h2>
+<hr style="width:200px" class="w3-opacity">
+<p>Music is a beautiful, constantly evolving field of art. Computer programs provide us with new tools for both the creation and consumption of music, and in particular we can do this easily using p5.js, through the p5.js-sound add-on library!</p>
+<p>In this tutorial, we will walk through the basics of creating p5 sketches for algorithmic composition and interactive music. For a fun teaser of what is possible, see the sketch below!</p>
 
 <script type="text/p5">
 function setup() {
-    createCanvas(100, 100);
+createCanvas(100, 100);
 }
 
 function draw() {
-    background(255, 0, 200);
+background(255, 0, 200);
 }
 </script>
 
-    <p>Excited to get started? Let’s dive right into it.</p>
+<p>Excited to get started? Let’s dive right into it.</p>
 
-  <!-- Portfolio Section -->
-  <div class="w3-padding-64 w3-content" id="building-blocks">
-    <h2 class="w3-text-dark-grey">The Building Blocks of Music</h2>
-    <hr style="width:200px" class="w3-opacity">
+<!-- Portfolio Section -->
+<div class="w3-padding-64 w3-content" id="building-blocks">
+<h2 class="w3-text-dark-grey">The Building Blocks of Music</h2>
+<hr style="width:200px" class="w3-opacity">
 
 <p>This is a note.</p>
 
 <script type="text/p5">
 // Sketch - Note
 function setup() {
-    createCanvas(100, 100);
+createCanvas(100, 100);
 }
 
 function draw() {
-    background(255, 0, 200);
+background(255, 0, 200);
 }
 </script>
 
 <p>Notes are characterized by their pitch, velocity and timing information.</p>
- 
+
 <p>Musical pitch refers to how high- or low-pitched the note sounds. This characteristic comes from the oscillating frequency of the sound wave producing that note.</p>
- 
+
 <p>Frequency is a continuous value, which means that 440Hz and 440.00001Hz are both equally valid, and there are an infinite number of possible pitch frequencies. However, Western music typically restricts itself to a particular subset of standard pitch frequencies, and we give names to these standard frequencies such as “A3”, “C5”, “F#4” and so on.</p>
- 
+
 <p>Pitch names like “D#4” may be familiar to you depending on how comfortable you are with music theory, but if you don’t know your sharps from your flats, fret not! There is an alternate naming scheme called MIDI note numbers, which simply labels each standard frequency with a number which increases as the pitch gets higher. Easy, right?</p>
- 
+
 <script type="text/p5">
 // Sketch - MIDI note numbers
 function setup() {
-    createCanvas(100, 100);
+createCanvas(100, 100);
 }
 
 function draw() {
-    background(255, 0, 200);
+background(255, 0, 200);
 }
 </script>
- 
+
 <p>The velocity of a note indicates how hard a note is struck. Primarily, this influences how loud the note is played, but depending on the implementation of your synthesizer’s instrument voice, velocity may also have an effect on timbre and other sound characteristics. For the purpose of this tutorial, we can simply think of velocity as the same thing as volume.</p>
 
 <script type="text/p5">
 // Sketch - Velocity
 function setup() {
-    createCanvas(100, 100);
+createCanvas(100, 100);
 }
 
 function draw() {
-    background(255, 0, 200);
+background(255, 0, 200);
 }
 </script>
 
@@ -137,25 +140,25 @@ function draw() {
 <script type="text/p5">
 // Sketch - Note Array
 function setup() {
-    createCanvas(100, 100);
+createCanvas(100, 100);
 }
 
 function draw() {
-    background(255, 0, 200);
+background(255, 0, 200);
 }
 </script>
 
 <p>Using an array of notes like the one above, we can manually compose music and ask p5.js to play it back for us. That’s great, but in the realm of computers and interactive programs, we can do so much more! </p>
 
 <!-- End Portfolio Section -->
-  </div>
+</div>
 
-  
-    <!-- Footer -->
-  <footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
-    <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
-  <!-- End footer -->
-  </footer>
+
+<!-- Footer -->
+<footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
+<p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+<!-- End footer -->
+</footer>
 
 <!-- END PAGE CONTENT -->
 </div>

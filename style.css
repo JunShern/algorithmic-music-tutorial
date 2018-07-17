@@ -7,17 +7,41 @@ body, h1,h2,h3,h4,h5,h6 {
 /* Set the width of the sidebar to 120px */
 .w3-sidebar {
     width: 120px;
-    background: #EEE;
+    background: #FFF;
 }
 /* Add a left margin to the "page content" that matches the width of the sidebar (120px) */
 #main {
-    margin-left: 120px
+    /* margin-left: 0px; */
 }
 /* Remove margins from "page content" on small screens */
 @media only screen and (max-width: 600px) {
     #main {
         margin-left: 0
     }
+}
+
+iframe {
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.banner-container {
+    position: relative;
+    height: 100vh;
+}
+.banner-iframe {
+    width: 100%;
+    height: 100vh;
+    padding: 0;
+}
+.banner-text {
+    margin: auto auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 35vh;
 }
 
 .numberCircle {
