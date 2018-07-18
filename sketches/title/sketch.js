@@ -24,7 +24,7 @@ var synth;
 var paused = false;
 
 function setup() {
-    createCanvas(windowWidth*0.9, windowHeight*0.9);
+    createCanvas(windowWidth, windowHeight);
 
     for (var i=0; i<numParticles; i++) {
     	particles.push(new Particle(i));
@@ -38,7 +38,7 @@ function setup() {
 }
 
 function draw() {
-  background(255);
+  background(255,100,100);
 
   if (paused) {
     text("Click to Play", mouseX, mouseY);
@@ -86,7 +86,7 @@ function Particle(index) {
 	this.jitter = 1;
 	
 	// colorMode(HSB,100);
-	this.c = [random(255), random(255), random(255)]; 
+	this.c = [random(100,255)]; //[random(255), random(255), random(255)]; 
 	// colorMode(RGB,255);
 
 	this.children = [];
@@ -94,7 +94,7 @@ function Particle(index) {
 	this.numChildren = this.diameter;
 
 	this.display = function() {
-    fill(this.c[0], this.c[1], this.c[0], (height - this.y) * 255 / height);
+    fill(this.c[0], (height - this.y) * 255 / height);
 		ellipse(this.x+random(-this.jitter,this.jitter), this.y+random(-this.jitter,this.jitter), this.diameter, this.diameter);
 	}
 

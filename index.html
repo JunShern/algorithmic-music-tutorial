@@ -12,8 +12,22 @@
 
 <body class="w3-white">
 
+<!-- Page Content -->
+<div id="main">
+<!-- Header/Home -->
+<header class="w3-container w3-center w3-white" id="home">
+    <div class="banner-container">
+        <iframe src="sketches/title/index.html" class="banner-iframe"></iframe>
+        <div class="banner-text">
+            <h1 class="w3-jumbo"><span class="w3-hide-small">Algorithmic Composition</h1>
+            <p>An interactive and explorable tutorial on algorithmic music composition with p5.js-sound.</p>
+        </div>
+    </div>
+</header>
+
+
 <!-- Icon Bar (Sidebar - hidden on small screens) -->
-<!-- <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
+<nav class="sidebar w3-small w3-hide-small w3-center">
     <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
         <i class="fa fa-angle-up w3-xxlarge"></i>
     </a>
@@ -38,38 +52,18 @@
     <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
         <i class="fa fa-braille w3-xxlarge"></i>
     </a>
-</nav> -->
+</nav>
 
-<!-- Navbar on small screens (Hidden on medium and large screens) -->
-<div class="w3-top w3-hide-large w3-hide-medium" id="myNavbar">
-    <div class="w3-bar w3-white w3-opacity w3-hover-opacity-off w3-center w3-small">
-        <a href="#" class="w3-bar-item w3-button" style="width:25% !important">HOME</a>
-        <a href="#about" class="w3-bar-item w3-button" style="width:25% !important">ABOUT</a>
-        <a href="#photos" class="w3-bar-item w3-button" style="width:25% !important">PHOTOS</a>
-        <a href="#contact" class="w3-bar-item w3-button" style="width:25% !important">CONTACT</a>
-    </div>
-</div>
-
-<!-- Page Content -->
-<div class="w3-padding-large" id="main">
-<!-- Header/Home -->
-<header class="w3-container w3-center w3-white" id="home">
-    <div class="banner-container">
-        <iframe src="sketches/title/index.html" class="banner-iframe"></iframe>
-        <div class="banner-text">
-            <h1 class="w3-jumbo"><span class="w3-hide-small">Algorithmic Composition</h1>
-            <p>An interactive and explorable tutorial on algorithmic music composition with p5.js-sound.</p>
-        </div>
-    </div>
-</header>
-
+<div class="progress"></div>
 
 <!-- About Section -->
-<div class="w3-content w3-justify w3-text-grey w3-padding-64" id="motivation">
+<div class="w3-content w3-justify w3-padding-64 w3-text-grey" id="motivation">
+
 <h2 class="w3-text-dark-grey">Motivation</h2>
 <hr style="width:200px" class="w3-opacity">
+
 <p>Music is a beautiful, constantly evolving field of art. Computer programs provide us with new tools for both the creation and consumption of music, and in particular we can do this easily using p5.js, through the p5.js-sound add-on library!</p>
-<p>In this tutorial, we will walk through the basics of creating p5 sketches for algorithmic composition and interactive music. For a fun teaser of what is possible, see the sketch below!</p>
+<p>In this tutorial, we will walk through the basics of creating p5 sketches for algorithmic composition and interactive music. For a fun teaser of what is possible, see the sketch below!</p>        
 
 <script type="text/p5">
 function setup() {
@@ -79,7 +73,7 @@ createCanvas(100, 100);
 function draw() {
 background(255, 0, 200);
 }
-</script>
+</script>            
 
 <p>Excited to get started? Let’s dive right into it.</p>
 
@@ -149,6 +143,11 @@ background(255, 0, 200);
 </script>
 
 <p>Using an array of notes like the one above, we can manually compose music and ask p5.js to play it back for us. That’s great, but in the realm of computers and interactive programs, we can do so much more! </p>
+
+
+<div class="full-width" style="height: 50vh">
+<iframe src="sketches/title/index.html"></iframe>
+</div>
 
 <!-- End Portfolio Section -->
 </div>

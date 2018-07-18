@@ -5,13 +5,16 @@ body, h1,h2,h3,h4,h5,h6 {
     margin-bottom: 12px
 }
 /* Set the width of the sidebar to 120px */
-.w3-sidebar {
-    width: 120px;
-    background: #FFF;
+.sidebar {
+    position: sticky; position: -webkit-sticky; /* Safari */
+    top: 0;
+    float: right;
+    width: 80px;
+    background: transparent;
+    z-index: 100;
 }
-/* Add a left margin to the "page content" that matches the width of the sidebar (120px) */
-#main {
-    /* margin-left: 0px; */
+.w3-container {
+    padding: 0;
 }
 /* Remove margins from "page content" on small screens */
 @media only screen and (max-width: 600px) {
@@ -20,11 +23,28 @@ body, h1,h2,h3,h4,h5,h6 {
     }
 }
 
+.progress {
+    background: linear-gradient(to right, #F9EC31 var(--scroll), transparent 0);
+    background-repeat: no-repeat;
+    position: fixed;
+    width: 100%;
+    height: 4px;
+    z-index: 1;
+}
+
+.full-width {
+    margin-left: calc(50% - 50vw);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100vw;
+}
+
 iframe {
     border: none;
     margin: 0;
     padding: 0;
     width: 100%;
+    height: 100%;
 }
 
 .banner-container {
