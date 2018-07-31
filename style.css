@@ -1,5 +1,19 @@
+body {
+    font-size: 16px;
+}
+p {
+    color: #333;
+}
+a {
+    color: #ec245e;
+    text-decoration: none;
+}
+a:hover {
+    color: #ec245e;
+    text-decoration: underline;
+}
 body, h1,h2,h3,h4,h5,h6 {
-    font-family: "Montserrat", sans-serif
+    font-family: "PT Serif", serif
 }
 .w3-row-padding img {
     margin-bottom: 12px
@@ -23,13 +37,12 @@ body, h1,h2,h3,h4,h5,h6 {
     }
 }
 
-.progress {
-    background: linear-gradient(to right, #F9EC31 var(--scroll), transparent 0);
-    background-repeat: no-repeat;
-    position: fixed;
-    width: 100%;
-    height: 4px;
-    z-index: 1;
+.prerequisites-panel {
+    background-color: #f1f1f1;
+    padding: 15px;
+}
+.prerequisites-panel h4 {
+    padding: 0;
 }
 
 .full-width {
@@ -37,6 +50,12 @@ body, h1,h2,h3,h4,h5,h6 {
     margin-top: 20px;
     margin-bottom: 20px;
     width: 100vw;
+}
+.full-width p {
+    text-align: center;
+    margin: 10px 30px;
+    font-size: 80%;
+    font-style: italic;
 }
 
 iframe {
@@ -61,23 +80,100 @@ iframe {
     position: absolute;
     left: 0;
     right: 0;
-    top: 35vh;
+    top: 10vh;
+    font-size: 120%;
+    pointer-events: none; /* So that we can interact with the canvas below */
 }
 
-.numberCircle {
-    border-radius: 50%;
-    behavior: url(PIE.htc);
-    /* remove if you don't care about IE8 */
-    width: 36px;
-    height: 36px;
-    padding: 8px;
-    background: #fff;
-    border: 2px solid #666;
-    color: #666;
-    text-align: center;
-    font: 32px Arial, sans-serif;
+.nav-item {
+    float: left;
 }
+
 
 .fa {
     color: #ec245e;
+}
+footer.content {
+    /* max-width: 980px;
+    margin: auto;
+    padding-top: 64px; */
+    padding-bottom: 32px;
+}
+footer p {
+    color: #555;
+    font-size: 80%;
+}
+
+/* Borrowed styles */
+/* W3.CSS 4.10 February 2018 by Jan Egil and Borge Refsnes */
+.center {
+    text-align: center!important;
+    width: auto;
+}
+.jumbo {
+    font-size: 220%;
+    color:#000;
+}
+.content {
+    max-width: 980px;
+    margin: auto;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+h1,h2 {
+    padding-top: 64px;
+    color:#3a3a3a;
+}
+h3,h4,h5,h6 {
+    padding-top: 24px;
+    color:#3a3a3a;
+}
+hr {
+    border: 0;
+    border-top: 2px solid #ddd;
+    margin: 20px 0;
+}
+h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-size:18px}h6{font-size:16px}
+/* END OF BORROWED STYLES */
+
+/* Collapsible */
+.collapsible {
+    background-color: #eee;
+    /* color: white; */
+    cursor: pointer;
+    /* padding: 18px; */
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 140%;
+    padding: 18px;
+    margin-top: 24px;
+}
+.active, .collapsible:hover {
+    background-color: #ddd;
+}
+.collapsible:after {
+    content: '\002B';
+    font-weight: bold;
+    float: right;
+    margin-right: 5px;
+}
+.active:after {
+    content: "\2212";
+}
+.collapsible-content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+}
+/* Code */
+pre {
+    border-left: solid 2px #ccc;
+    padding-left: 18px;
+    margin: 2em 0 2em -20px;
 }

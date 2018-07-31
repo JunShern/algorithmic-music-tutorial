@@ -4,158 +4,237 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="//toolness.github.io/p5.js-widget/p5-widget.js"></script>
+<script src="script.js"></script>
 <link rel="stylesheet" href="w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/solid.css" integrity="sha384-TbilV5Lbhlwdyc4RuIV/JhD8NR+BfMrvz4BL5QFa2we1hQu6wvREr3v6XSRfCTRp" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/fontawesome.css" integrity="sha384-ozJwkrqb90Oa3ZNb+yKFW2lToAWYdTiF1vt8JiH5ptTGHTGcN7qdoR1F95e0kYyG" crossorigin="anonymous">
 <link rel="stylesheet" href="style.css">
 
-<body class="w3-white">
+<!-- Highlight.js for syntax highlighting -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<body>
 
 <!-- Page Content -->
 <div id="main">
 <!-- Header/Home -->
-<header class="w3-container w3-center w3-white" id="home">
+<header class="center" id="home">
     <div class="banner-container">
         <iframe src="sketches/title/index.html" class="banner-iframe"></iframe>
         <div class="banner-text">
-            <h1 class="w3-jumbo"><span class="w3-hide-small">Algorithmic Composition</h1>
+            <h1 class="jumbo">Algorithmic Composition</h1>
             <p>An interactive and explorable tutorial on algorithmic music composition with p5.js-sound.</p>
         </div>
     </div>
 </header>
 
-
-<!-- Icon Bar (Sidebar - hidden on small screens) -->
-<nav class="sidebar w3-small w3-hide-small w3-center">
-    <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-        <i class="fa fa-angle-up w3-xxlarge"></i>
-    </a>
-    <a href="#motivation" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-        <i class="fa fa-fire w3-xxlarge"></i>
-    </a>
-    <a href="#building-blocks" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-        <i class="fa fa-circle w3-xxlarge"></i>
-    </a>
-    <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-        <i class="fa fa-ellipsis-h w3-xxlarge"></i>
-    </a>
-    <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-        <i class="fa fa-th w3-xxlarge"></i>
-    </a>
-    <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-        <i class="fa fa-vector-square w3-xxlarge"></i>
-    </a>
-    <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-        <i class="fa fa-share-alt w3-xxlarge"></i>
-    </a>
-    <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-white">
-        <i class="fa fa-braille w3-xxlarge"></i>
-    </a>
+<nav>
+    <div class="nav-item">
+        <a href="#about-time">About Time!<i class="fa fa-angle-up"></i></a>
+    </div>
+    <div class="nav-item">
+        <a href="#">Algorithmic Composition<i class="fa fa-angle-up"></i></a>
+    </div>
 </nav>
 
-<div class="progress"></div>
+<div class="content">
 
-<!-- About Section -->
-<div class="w3-content w3-justify w3-padding-64 w3-text-grey" id="motivation">
+<button class="collapsible">Prerequisites</button>
+<div class="collapsible-content">
+    <p>This tutorial is written with code examples in JavaScript, using the p5.js library. Basic knowledge of programming, including an understanding of classes, is assumed. If you can read this excerpt and understand what it does, you’re good to go!</p>
+<pre><code class="javascript">function Musician() {
+    this.songs = [];
+}
+Musician.prototype.learnSong = function(songTitle) {
+    this.songs.push(songTitle);
+};
+Musician.prototype.listSongs = function() {
+    console.log(&ldquo;I know how to play the following songs: &rdquo;);
+    for (var i=0; i&lt;this.songs.length; i++) {
+        console.log(this.songs[i]);
+    }
+};
 
-<h2 class="w3-text-dark-grey">Motivation</h2>
-<hr style="width:200px" class="w3-opacity">
+musicanA = new Musician();
+musicianA.learnSong(&ldquo;Wonderwall&rdquo;);
+musicianA.listSongs();          
+</code></pre>
+    <p>If the code snippet above looks like Greek to you, don’t worry! You can still read on and pick up the conceptual ideas behind the code, or better yet, you can <a href="https://www.w3schools.com/js/js_object_constructors.asp">brush up on your Greek</a>.</p>
+</div>
+
+<h2 id="motivation">Motivation</h2>
+<hr style="width:200px" class="horizontal-line">
 
 <p>Music is a beautiful, constantly evolving field of art. Computer programs provide us with new tools for both the creation and consumption of music, and in particular we can do this easily using p5.js, through the p5.js-sound add-on library!</p>
 <p>In this tutorial, we will walk through the basics of creating p5 sketches for algorithmic composition and interactive music. For a fun teaser of what is possible, see the sketch below!</p>        
 
-<script type="text/p5">
-function setup() {
-createCanvas(100, 100);
-}
-
-function draw() {
-background(255, 0, 200);
-}
-</script>            
-
 <p>Excited to get started? Let’s dive right into it.</p>
 
-<!-- Portfolio Section -->
-<div class="w3-padding-64 w3-content" id="building-blocks">
-<h2 class="w3-text-dark-grey">The Building Blocks of Music</h2>
-<hr style="width:200px" class="w3-opacity">
+<h1 id="the_problem">About Time!</h1>
+<hr style="width:200px" class="horizontal-line">
+<p>Before diving into music composition algorithms, we need to pay some attention to the aspect of timing. More so than for other channels like visual information, humans are sensitive to sound at millisecond resolutions.</p>
 
-<p>This is a note.</p>
+<p>This means that when working with music applications, we need to make sure that we can accurately schedule sounds when we want them to happen, and have the computer reliably play back those sounds when we expect them to.</p>
 
-<script type="text/p5">
-// Sketch - Note
+<h2 id="the_problem">The Problem</h2>
+<hr style="width:200px" class="horizontal-line">
+<p>If you’ve never used <a href="https://p5js.org/">p5.js</a> before, a basic program (called a p5.js “Sketch”) generally follows the following structure:</p>
+
+<pre><code class="javascript">// Runs only once, when the page loads
 function setup() {
-createCanvas(100, 100);
+  createCanvas(window.innerWidth, window.innerHeight); // Canvas size fills its container
 }
 
+// Runs after setup, and repeats 60 times a second by default
 function draw() {
-background(255, 0, 200);
+  background(255, 0, 0); // Paint the background red (RGB color)
+  ellipse(width/2, height/2, 50, 50); // Draw an ellipse at the center, width = height = 50
 }
-</script>
+</code></pre>
 
-<p>Notes are characterized by their pitch, velocity and timing information.</p>
-
-<p>Musical pitch refers to how high- or low-pitched the note sounds. This characteristic comes from the oscillating frequency of the sound wave producing that note.</p>
-
-<p>Frequency is a continuous value, which means that 440Hz and 440.00001Hz are both equally valid, and there are an infinite number of possible pitch frequencies. However, Western music typically restricts itself to a particular subset of standard pitch frequencies, and we give names to these standard frequencies such as “A3”, “C5”, “F#4” and so on.</p>
-
-<p>Pitch names like “D#4” may be familiar to you depending on how comfortable you are with music theory, but if you don’t know your sharps from your flats, fret not! There is an alternate naming scheme called MIDI note numbers, which simply labels each standard frequency with a number which increases as the pitch gets higher. Easy, right?</p>
-
-<script type="text/p5">
-// Sketch - MIDI note numbers
-function setup() {
-createCanvas(100, 100);
-}
-
-function draw() {
-background(255, 0, 200);
-}
-</script>
-
-<p>The velocity of a note indicates how hard a note is struck. Primarily, this influences how loud the note is played, but depending on the implementation of your synthesizer’s instrument voice, velocity may also have an effect on timbre and other sound characteristics. For the purpose of this tutorial, we can simply think of velocity as the same thing as volume.</p>
-
-<script type="text/p5">
-// Sketch - Velocity
-function setup() {
-createCanvas(100, 100);
-}
-
-function draw() {
-background(255, 0, 200);
-}
-</script>
-
-<p>The last bit, timing information, needs to include both the attack and release times for that particular note (which can equivalently be represented as onset time and duration). This timing information can be expressed in terms of seconds or in musical time, which uses fractions relative to a composer-defined beats per minute (BPM).</p>
-
-<p>Now, if we take a sequence of notes, we get a song. In the example below, feel free to add/remove notes and play around with the note parameters to see how the song changes!</p>
-
-<script type="text/p5">
-// Sketch - Note Array
-function setup() {
-createCanvas(100, 100);
-}
-
-function draw() {
-background(255, 0, 200);
-}
-</script>
-
-<p>Using an array of notes like the one above, we can manually compose music and ask p5.js to play it back for us. That’s great, but in the realm of computers and interactive programs, we can do so much more! </p>
-
-
-<div class="full-width" style="height: 50vh">
-<iframe src="sketches/title/index.html"></iframe>
+<div class="full-width">
+    <div style="height: 20vh">
+        <iframe src="sketches/basic_sketch/index.html"></iframe>
+    </div>
+    <p>A typical <a href="https://p5js.org/">p5.js</a> program, known in the p5 community as a "sketch".</p>
 </div>
 
-<!-- End Portfolio Section -->
+<p>We can set the frame rate of the draw loop using the frameRate() function, and this implies that we can get some sort of regular clock/timer using the draw loop. For example, if we wanted to make a metronome app that beeps at 60 beats-per-minute (BPM), we might do the following:</p>
+
+<pre><code class="javascript">var synth;
+var bpm = 60; // Metronome ticks at 60 beats-per-minute
+function setup() {
+  createCanvas(100, 100);
+  synth = new p5.PolySynth();
+  frameRate(60 / bpm); // Frequency = 60 seconds / beats-per-minute
+}
+
+// Repeats 60 times a second by default
+function draw() {
+  background(255); // Paint the background white
+  synth.play(440); // Play a short note at frequency 440
+}
+</code></pre>
+
+<p>However, there’s a problem with this approach, which is that the draw loop was not designed for timing-critical applications. Therefore, the frame rate we set may not be strictly adhered to - the loop may run slower if for example the draw loop has a large amount of graphics to render or your browser has many tabs open.</p>
+
+
+<h2 id="the_solution">The Solution</h2>
+<hr style="width:200px" class="horizontal-line">
+<p>To handle the need for precise audio scheduling, the p5-sound library offers an alternative scheduling mechanism called the SoundLoop. Using the SoundLoop, we can build a metronome as before, with just a slight change in code:</p>
+
+<pre><code class="javascript">var synth;
+var sloop;
+var bpm = 60; // Metronome ticks at 60 beats-per-minute
+
+function setup() {
+  createCanvas(100, 100);
+  synth = new p5.PolySynth();
+  sloop = new p5.SoundLoop(mySoundLoop, 1); // SoundLoop gets called every 1 second
+}
+
+function mySoundLoop() {
+  synth.play(440); // Play a short note at frequency 440
+}
+</code></pre>
+
+<p>Notice that in this case, there is no more draw loop - the draw loop is optional if we are only using sound, but in many cases it will be useful to have both the SoundLoop and draw loop, to handle audio and visuals respectively.</p>
+
+<p>We can now compare the two approaches by listening to both metronomes together in the same sketch:</p>
+
+<div class="full-width">
+    <div style="height: 30vh">
+        <iframe src="sketches/two_clocks/index.html"></iframe>
+    </div>
+    <p>A typical <a href="https://p5js.org/">p5.js</a> program, known in the p5 community as a "sketch".</p>
 </div>
+
+<p>Notice that when you first start the sketch, the two tones are in sync, but after some time they start to have a perceptible drift in timing, especially if you switch to a different tab (the browser allocates fewer resources to unfocused tabs, so the draw loop is neglected). The difference may be more or less obvious depending on your processor speed, but in general the SoundLoop will always be more reliable for scheduling sounds than the draw loop. This is because the SoundLoop is built on Web Audio clock, which you can find out more about in <a href="https://www.html5rocks.com/en/tutorials/audio/scheduling/">this article by Chris Wilson</a>.</p>
+
+
+<h2 id="time_management">Time Management In Practice</h2>
+<hr style="width:200px" class="horizontal-line">
+<p>So now, we have some inkling of how to build p5.js sketches with accurate timing information. But how do we go from the simple metronome example to that supercalifabuloustic-interactive-musical-journey you have in your head?</p>
+
+<p>As is often the case, it depends.</p>
+
+<p>It depends on what type of interactions you need from your program, between the user and the sound or between the sound and other components of the program. The best way to see this is by looking at some examples.</p>
+
+<h3 id="instantaneous_reaction">Instantaneous Reaction</h3>
+
+<p>One of the most common use-cases for audio in programs is just as instantaneous feedback for user interactions. Whether you’re working on a 2018 revamp of Space Invaders which goes ZZZZOOP on every laser fired, or a simple navigation menu whose buttons BOOP, you’re going to want to set up your sounds to be triggered instantaneously based on certain events.</p>
+
+<p>In this basic type of scenario, there is no need for the SoundLoop or any advanced scheduling. All we need to do is simply instantiate our sound object in setup, and play that sound in the trigger-event’s callback function.</p>
+
+<p>We will explore such a scenario in the context of creating a virtual piano application. For our virtual piano, we will just a PolySynth object to produce sounds, and the keyPressed and keyReleased events to start and stop the sounds. The code looks like this:</p>
+
+<pre><code class="javascript">var polySynth;
+var velocity = 0.7; // From 0-1
+var baseNote = 72;
+var keyOrder = &quot;ASDFGHJKL&quot;;
+var keyStates = [0,0,0,0,0,0,0,0,0];
+
+function setup() {
+  createCanvas(window.innerWidth, window.innerHeight);
+  textAlign(CENTER, CENTER);
+  strokeWeight(3);
+  // Create synth voice
+  synth = new p5.PolySynth();
+}
+
+function draw() {
+	... // (Omitted)
+}
+
+function keyPressed() {
+  keyIndex = keyOrder.indexOf(key);
+  // Check if valid note key pressed
+  if (keyIndex &gt;= 0) {
+    // Update key state
+    keyStates[keyIndex] = 1;
+    // Play synth
+    midiNoteNumber = baseNote + keyIndex; // 0-127; 60 is Middle C (C4)
+    freq = midiToFreq(midiNoteNumber);
+    synth.noteAttack(freq, velocity, 0);
+  }
+}
+
+function keyReleased() {
+  keyIndex = keyOrder.indexOf(key);
+  // Check if valid note key pressed
+  if (keyIndex &gt;= 0) {
+    // Update key state
+    keyStates[keyIndex] = 0;
+    // Stop synth
+    midiNoteNumber = baseNote + keyIndex; // 0-127; 60 is Middle C (C4)
+    freq = midiToFreq(midiNoteNumber);
+    synth.noteRelease(freq, 0);
+  }
+}
+</code></pre>
+
+<div class="full-width">
+    <div style="height: 30vh">
+        <iframe src="sketches/virtual_piano/index.html"></iframe>
+    </div>
+    <p>A typical <a href="https://p5js.org/">p5.js</a> program, known in the p5 community as a "sketch".</p>
+</div>
+
+
+Static scheduling (array_of_notes)
+State-controlled playback, with start + stop (array_of_notes_soundloop)
+State-controlled playback, audio controls visuals (random_pentatonic)
+State-controlled playback, visuals control audio (sequencer)
+
+
+<p>To handle the need for precise audio scheduling, the p5-sound library offers an alternative scheduling mechanism called the SoundLoop. Using the SoundLoop, we can build a metronome as before, with just a slight change in code:</p>
 
 
 <!-- Footer -->
-<footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
-<p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+<footer class="content">
+<p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
 <!-- End footer -->
 </footer>
 

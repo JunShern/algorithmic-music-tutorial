@@ -39,13 +39,6 @@ function setup() {
 
 function draw() {
   background(255,100,100);
-
-  if (paused) {
-    text("Click to Play", mouseX, mouseY);
-  } else {
-    text("Click to Pause", mouseX, mouseY);
-  }
-
   fill(255,255);
   // strokeWeight(3);
   noStroke();

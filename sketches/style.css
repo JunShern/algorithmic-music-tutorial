@@ -1,0 +1,34 @@
+body {
+    margin: 0;
+}
+
+button {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    padding:0.5em 3em;
+    border:0.16em solid rgba(255,255,255,0.8);
+    font-family:sans-serif;
+    font-weight:800;
+    color:rgba(255,255,255,0.8);
+    text-align:center;
+    transition: all 0.15s;
+    background: transparent;
+}
+button:hover{
+    color:rgba(255,255,255,1);
+    border-color:rgba(255,255,255,1);
+}
+button:active{
+    color:rgba(255,255,255,0.8);
+    border-color:rgba(255,255,255,1);
+}
+button:focus {
+    outline:0;
+}
+@media all and (max-width:30em){
+    button {
+        display:block;
+        margin:0.4em auto;
+    }
+}
