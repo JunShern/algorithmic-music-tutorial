@@ -7,23 +7,9 @@
 
   <script language="javascript" type="text/javascript" src="sketch.js"></script>
 
+  <script language="javascript" type="text/javascript" src="../script.js"></script>
+
   <link rel="stylesheet" href="../style.css">
 </head>
 
-<button onClick="playPauseSketch(this)">PAUSE</button>
-<script>
-var sketchRunning = true;
-function playPauseSketch(buttonElement) {
-  if (sketchRunning) {
-    noLoop();
-    sloop.pause();
-    sketchRunning = false;
-    buttonElement.innerHTML = "PLAY";
-  } else {
-    loop();
-    sloop.start();
-    sketchRunning = true;
-    buttonElement.innerHTML = "PAUSE";
-  }
-}
-</script>
+<button onClick="playPauseSketch(this)" class="sketch-button">PAUSE</button>
