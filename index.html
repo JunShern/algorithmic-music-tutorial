@@ -31,12 +31,12 @@
 </header>
 
 <nav>
-    <div class="nav-item">
-        <a href="#about-time">About Time<i class="fa fa-angle-up"></i></a>
-    </div>
-    <div class="nav-item">
-        <a href="#">Algorithmic Composition<i class="fa fa-angle-up"></i></a>
-    </div>
+    <a href="#about_time">
+        <button class="nav-item">ABOUT TIME</button>
+    </a>
+    <a href="#algorithmic_composition">
+        <button class="nav-item">ALGORITHMIC COMPOSITION</button>
+    </a>
 </nav>
 
 <div class="content">
@@ -64,19 +64,11 @@ musicianA.listSongs();
     <p>If the code snippet above looks like Greek to you, don’t worry! You can still read on and pick up the conceptual ideas behind the code, or better yet, you can <a href="https://www.w3schools.com/js/js_object_constructors.asp">brush up on your Greek</a>.</p>
 </div>
 
-<h2 id="motivation">Motivation</h2>
+<h1 id="about_time">Part 1: About Time!</h1>
 <hr style="width:200px" class="horizontal-line">
+<p>When dealing with musical applications, we need to pay special attention to the aspect of timing. More so than in other channels like visual information, humans are sensitive to sound - and can detect discrepancies at millisecond resolutions.</p>
 
-<p>Music is a beautiful, constantly evolving field of art. Computer programs provide us with new tools for both the creation and consumption of music, and in particular we can do this easily using p5.js, through the p5.js-sound add-on library!</p>
-<p>In this tutorial, we will walk through the basics of creating p5 sketches for algorithmic composition and interactive music. For a fun teaser of what is possible, see the sketch below!</p>        
-
-<p>Excited to get started? Let’s dive right into it.</p>
-
-<h1 id="the_problem">Part 1: About Time!</h1>
-<hr style="width:200px" class="horizontal-line">
-<p>Before diving into music composition algorithms, we need to pay some attention to the aspect of timing. More so than for other channels like visual information, humans are sensitive to sound at millisecond resolutions.</p>
-
-<p>This means that when working with music applications, we need to make sure that we can accurately schedule sounds when we want them to happen, and have the computer reliably play back those sounds when we expect them to.</p>
+<p>This means that when developing music applications, we need to make sure that we can accurately schedule sounds when we want them to happen, and have the computer reliably play back those sounds when we expect them to.</p>
 
 <h2 id="the_problem">The Problem</h2>
 <hr style="width:200px" class="horizontal-line">
@@ -105,6 +97,7 @@ function draw() {
 
 <pre><code class="javascript">var synth;
 var bpm = 60; // Metronome ticks at 60 beats-per-minute
+
 function setup() {
   createCanvas(100, 100);
   synth = new p5.PolySynth();
@@ -127,16 +120,21 @@ function draw() {
 
 <pre><code class="javascript">var synth;
 var sloop;
+var loopInterval = 1; // Loop interval of 1 second corresponds to 60 BPM
 
 function setup() {
-  createCanvas(100, 100);
+  noCanvas();
   synth = new p5.PolySynth();
-  sloop = new p5.SoundLoop(mySoundLoop, 1); // SoundLoop gets called at 60 bpm = every 1 second
+  // Create a SoundLoop which calls mySoundLoop every loopInterval seconds
+  sloop = new p5.SoundLoop(mySoundLoop, loopInterval);
   sloop.start();
 }
 
-function mySoundLoop() {
-  synth.play(440); // Play a short note at frequency 440
+function mySoundLoop(cycleStartTime) {
+  // Play a note at 440Hz, velocity of 1 (full volume),
+  // The note is scheduled to begin at the start of each cycle, 
+  // and is held for a duration of 0.5s
+  synth.play(440, 1.0, cycleStartTime, 0.5);
 }
 </code></pre>
 
@@ -148,10 +146,10 @@ function mySoundLoop() {
     <div style="height: 30vh">
         <iframe src="sketches/two_clocks/index.html"></iframe>
     </div>
-    <p>A typical <a href="https://p5js.org/">p5.js</a> program, known in the p5 community as a "sketch".</p>
+    <p>Comparing the timing accuracy of the draw loop versus the SoundLoop. The loops don't necessarily start in sync; what's important is to observe the consistency in their individual cycles. Scroll away or switch focus to a different tab to see an obvious difference in behaviour!</p>
 </div>
 
-<p>Notice that when you first start the sketch, the two tones are in sync, but after some time they start to have a perceptible drift in timing, especially if you switch to a different tab (the browser allocates fewer resources to unfocused tabs, so the draw loop is neglected). The difference may be more or less obvious depending on your processor speed, but in general the SoundLoop will always be more reliable for scheduling sounds than the draw loop. This is because the SoundLoop is built on Web Audio clock, which you can find out more about in <a href="https://www.html5rocks.com/en/tutorials/audio/scheduling/">this article by Chris Wilson</a>.</p>
+<p>Notice that when you first start the sketch, the two tones are in sync, but after some time they start to have a perceptible drift in timing, especially if you scroll away or switch to a different tab (the browser allocates fewer resources to unfocused tabs, so the draw loop is neglected). The difference may be more or less obvious depending on your processor speed, but in general the SoundLoop will always be more reliable for scheduling sounds than the draw loop. This is because the SoundLoop is built on Web Audio clock, which you can find out more about in <a href="https://www.html5rocks.com/en/tutorials/audio/scheduling/">this article by Chris Wilson</a>.</p>
 
 
 <h2 id="time_management">Time Management In Practice</h2>
@@ -168,11 +166,9 @@ function mySoundLoop() {
 
 <p>In this basic type of scenario, there is no need for the SoundLoop or any advanced scheduling. All we need to do is simply instantiate our sound object in setup, and play that sound in the trigger-event’s callback function.</p>
 
-<p>We will explore such a scenario in the context of creating a virtual piano application. For our virtual piano, we will use a PolySynth object to produce sounds, and the keyPressed and keyReleased events to start and stop the sounds. The relevant part of the code (omitting the setup and draw functions) looks like this:</p>
+<p>We will explore such a scenario in the context of creating a virtual piano application. For our virtual piano, we will use a PolySynth object to produce sounds, and the keyPressed and keyReleased events to start and stop the sounds. The relevant part of the code looks like this:</p>
 
 <pre><code class="javascript">var synth;
-var velocity = 0.7; // From 0-1
-var baseNote = 72;
 var keyOrder = &quot;ASDFGHJKL&quot;;
 var keyStates = [0,0,0,0,0,0,0,0,0];
 
@@ -209,7 +205,7 @@ function keyReleased() {
     <div style="height: 30vh">
         <iframe src="sketches/virtual_piano/index.html"></iframe>
     </div>
-    <p>A typical <a href="https://p5js.org/">p5.js</a> program, known in the p5 community as a "sketch".</p>
+    <p>A simple virtual piano program. Type "ASDFGHJKL" to play!</p>
 </div>
 
 <h3 id="sequence_of_notes">Playing A Sequence of Notes (Static Scheduling)</h3>
@@ -257,7 +253,7 @@ function keyReleased() {
 
 <p>Earlier, we touched briefly upon the usefulness of the SoundLoop without going into too much detail. Let's look a little more closely!</p>
 
-<p>The SoundLoop provides users with a way to access the Web Audio Clock for accurate audio scheduling. Consider the simple example:</p>
+<p>The SoundLoop provides users with a way to access the Web Audio Clock for accurate audio scheduling. Recall the example from before:</p>
 
 <pre><code class="javascript">var synth;
 var sloop;
@@ -369,7 +365,7 @@ function soundLoop(cycleStartTime) {
     <div style="height: 30vh">
         <iframe src="sketches/array_of_notes_soundloop/index.html"></iframe>
     </div>
-    <p>Playing a sequence of notes using a SoundLoop, which allows us to start, stop, and even alter playback (such as changing tempo) as it happens.</p>
+    <p>Playing a sequence of notes using a SoundLoop, which allows us to start, stop, and even alter playback (eg. changing tempo) as it happens.</p>
 </div>
 
 <h3 id="sequence_of_notes">Synchronizing Audio and Visuals</h3>
@@ -425,19 +421,25 @@ function draw() {
     <div style="height: 60vh">
         <iframe src="sketches/visualize_pentatonic/index.html"></iframe>
     </div>
-    <p>Playing a sequence of notes using a SoundLoop, which allows us to start, stop, and even alter playback (such as changing tempo) as it happens.</p>
+    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
 </div>
 
 <h3 id="sequence_of_notes">Extra Credit: Step Sequencer</h3>
 
-<p>Using all of the concepts that we have learned, we now have what it takes to build something more useful: A step sequencer. If you aren't familiar with step sequencers, step sequencers are a relatively modern kind of musical instrument used by electronic musicians to easily create beats and melodic patterns.</p>
+<p>Using all of the concepts that we have learned, we now have what it takes to build something practical: A step sequencer. Step sequencers are a relatively modern kind of musical instrument used by electronic musicians to easily create beats and melodic patterns.</p>
+
+<p>The code used to create this example builds upon the same ideas we have already seen so we won't go into the code in detail here, but feel free to check out the full code and remix it into your own creations!</p>
 
 <div class="full-width">
     <div style="height: 60vh">
         <iframe src="sketches/grid_sequencer/index.html"></iframe>
     </div>
-    <p>Playing a sequence of notes using a SoundLoop, which allows us to start, stop, and even alter playback (such as changing tempo) as it happens.</p>
+    <p>A step sequencer. Click on the tiles to set/unset notes, and hit PLAY to get the groove going!</p>
 </div>
+
+<h2 id="whats_next">What's Next?</h2>
+<hr style="width:200px" class="horizontal-line">
+<p>We've reached the end of this tutorial, but don't stop here! Grab a coffee, take a break, and come back for Part 2 of this tutorial series, where we'll explore cool ideas and groovy examples from the world of algorithmic composition!</p>
 
 <!-- Footer -->
 <footer class="content">
