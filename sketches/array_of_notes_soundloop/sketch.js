@@ -38,7 +38,7 @@ var song = [
 ];
 
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight)
+  createCanvas(windowWidth, windowHeight)
   synth = new p5.PolySynth();
   sloop = new p5.SoundLoop(soundLoop, 0.1); // Interval doesn't matter; it changes in each loop iteration
 }

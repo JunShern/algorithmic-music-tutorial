@@ -92,11 +92,13 @@ iframe {
     width: 50%;
 }
 button.nav-item {
-    border:0.3em solid #ec245e;
+    cursor: pointer;
+    border: none;
+    border-top:0.3em solid black;
     padding:1em 3em;
     font-family:sans-serif;
     font-weight:800;
-    color:#ec245e;
+    color:black;
     text-align:center;
     transition: all 0.15s;
     background: transparent;
@@ -162,6 +164,11 @@ hr {
 h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-size:18px}h6{font-size:16px}
 /* END OF BORROWED STYLES */
 
+
+OL { counter-reset: item }
+LI { display: block }
+LI:before { content: counters(item, ".") " "; counter-increment: item }
+
 /* Collapsible */
 .collapsible {
     background-color: #eee;
@@ -175,7 +182,7 @@ h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-
     font: inherit;
     font-size: 140%;
     padding: 18px;
-    margin-top: 24px;
+    /* margin-top: 24px; */
 }
 .active, .collapsible:hover {
     background-color: #ddd;
@@ -194,7 +201,7 @@ h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
-    background-color: #f1f1f1;
+    background-color: #eee;
 }
 /* Code */
 pre {

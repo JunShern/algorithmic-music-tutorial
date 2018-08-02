@@ -30,16 +30,11 @@
     </div>
 </header>
 
-<nav>
-    <a href="#about_time">
-        <button class="nav-item">ABOUT TIME</button>
-    </a>
-    <a href="#algorithmic_composition">
-        <button class="nav-item">ALGORITHMIC COMPOSITION</button>
-    </a>
-</nav>
+<button class="collapsible">About</button>
+<div class="collapsible-content">
+    <p>To do. Some preamble explaining what to expect and the target audience for this tutorial.</p>
+</div>
 
-<div class="content">
 
 <button class="collapsible">Prerequisites</button>
 <div class="collapsible-content">
@@ -64,6 +59,38 @@ musicianA.listSongs();
     <p>If the code snippet above looks like Greek to you, don’t worry! You can still read on and pick up the conceptual ideas behind the code, or better yet, you can <a href="https://www.w3schools.com/js/js_object_constructors.asp">brush up on your Greek</a>.</p>
 </div>
 
+<button class="collapsible">Contents</button>
+<div class="collapsible-content">
+    <p>To-do</p>
+    <ol>
+        <li><a>Part 1: About Time</a>
+            <ol>
+                <li><a>The Problem</a></li>
+                <li><a>The Solution</a></li>
+                <li><a>Time Management In Practice</a>
+                    <ol>
+                        <li><a>Instantaneous Reaction</a></li>
+                        <li><a>Playing A Sequence of Notes (Static Scheduling)</a></li>
+                        <li><a>Playing A Sequence of Notes (Dynamic Scheduling)</a></li>
+                        <li><a>Synchronizing Audio and Visuals</a></li>
+                        <li><a>Extra Credit: Step Sequencer</a></li>
+                    </ol>
+                </li>
+                <li><a>What's Next?</a></li>
+            </ol>
+        </li>
+        <li><a>Part 2: Algorithmic Composition</a></li>
+    </ol>
+</div>
+
+<nav>
+    <button class="nav-item" id="default_open" onclick="openPage('about_time_tab', this)">ABOUT TIME</button>
+    <button class="nav-item" onclick="openPage('alg_comp_tab', this)">ALGORITHMIC COMPOSITION</button>
+</nav>
+
+<div class="content">
+
+<div id="about_time_tab" class="tab_content">
 <h1 id="about_time">Part 1: About Time!</h1>
 <hr style="width:200px" class="horizontal-line">
 <p>When dealing with musical applications, we need to pay special attention to the aspect of timing. More so than in other channels like visual information, humans are sensitive to sound - and can detect discrepancies at millisecond resolutions.</p>
@@ -212,7 +239,7 @@ function keyReleased() {
 
 <p>In another situation, directly relevant to interactive and algorithmic music composition, we might want to play a sequence of notes. </p>
 
-<p>For example, let's say you want your sketch to play <del>Mary Had A Little Lamb</del> <del>the ABC song</del> Twinkle Twinkle Little Star. First, you need to figure out how to represent your sequence of notes. There are a great many ways to do this, but perhaps one of the most intuitive representations is to just list out all the notes along with their velocity and timing information, like so:</p>
+<p>For example, let's say you want your sketch to play Twinkle Twinkle Little Star. First, you need to figure out how to represent your sequence of notes. There are a great many ways to do this, but perhaps one of the most intuitive representations is to just list out all the notes along with their velocity and timing information, like so:</p>
 
 <pre><code class="javascript">var song = [ 
   // Note pitch, velocity (between 0-1), start time (s), note duration (s)
@@ -313,7 +340,7 @@ function soundLoop(cycleStartTime) {
     <li>Use <i>time elapsed since the previous event</i> to denote temporal information instead of using <i>start time + duration</i>.</li>
 </ul>
 
-<p>Using this new representation, we can write out the same sequence of notes as we had before (Mary Had A Little Lamb):</p>
+<p>Using this new representation, we can write out another sequence of notes - this time for Mary Had A Little Lamb (<i>surprise!</i> It's actually the same song as before):</p>
 
 <pre><code class="javascript">var song = [ 
   // pitch, velocity (between 0-1), time since previous event (beats), type (1:ON or 0:OFF)
@@ -439,7 +466,78 @@ function draw() {
 
 <h2 id="whats_next">What's Next?</h2>
 <hr style="width:200px" class="horizontal-line">
-<p>We've reached the end of this tutorial, but don't stop here! Grab a coffee, take a break, and come back for Part 2 of this tutorial series, where we'll explore cool ideas and groovy examples from the world of algorithmic composition!</p>
+<p>We've reached the end of this lesson, but don't stop here!</p>
+
+<p>Grab a coffee, take a break, and come back for Part 2 of this tutorial series, where we'll explore cool ideas and groovy examples from the world of algorithmic composition!</p>
+
+</div>
+
+
+
+
+<div id="alg_comp_tab" class="tab_content">
+
+<h1 id="alg_comp">Part 2: Algorithmic Composition</h1>
+<hr style="width:200px" class="horizontal-line">
+
+<h2 id="whats_next">The Building Blocks of Music</h2>
+<hr style="width:200px" class="horizontal-line">
+
+<p>This is a note.</p>
+
+Sketch - Note
+
+<p>Notes are characterized by their pitch, velocity and timing information.</p>
+
+<p>Musical pitch refers to how high- or low-pitched the note sounds. This characteristic comes from the oscillating frequency of the sound wave producing that note.</p>
+
+<p>Frequency is a continuous value, which means that 440Hz and 440.00001Hz are both equally valid, and there are an infinite number of possible pitch frequencies. However, Western music typically restricts itself to a particular subset of standard pitch frequencies, and we give names to these standard frequencies such as “A3”, “C5”, “F#4” and so on.</p>
+
+<p>Pitch names like “D#4” may be familiar to you depending on how comfortable you are with music theory, but if you don’t know your sharps from your flats, fret not! There is an alternate naming scheme called MIDI note numbers, which simply labels each standard frequency with a number which increases as the pitch gets higher. Easy, right?</p>
+
+Sketch - MIDI note numbers
+
+<p>The velocity of a note indicates how hard a note is struck. Primarily, this influences how loud the note is played, but depending on the implementation of your synthesizer’s instrument voice, velocity may also have an effect on timbre and other sound characteristics. For the purpose of this tutorial, we can simply think of velocity as the same thing as volume.</p>
+
+Sketch - Velocity
+
+<p>The last bit, timing information, needs to include both the attack and release times for that particular note (which can equivalently be represented as onset time and duration). This timing information can be expressed in terms of seconds or in musical time, which uses fractions relative to a composer-defined beats per minute (BPM).</p>
+
+<p>Now, if we take a sequence of notes, we get a song. In the example below, feel free to add/remove notes and play around with the note parameters to see how the song changes!</p>
+
+Sketch - Note Array
+
+<p>Using an array of notes like the one above, we can manually compose music and ask p5.js to play it back for us. That’s great, but in the realm of computers and interactive programs, we can do so much more! </p>
+
+<div class="full-width">
+    <div style="height: 60vh">
+        <iframe src="sketches/visualize_pentatonic/index.html"></iframe>
+    </div>
+    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
+</div>
+
+<div class="full-width">
+    <div style="height: 60vh">
+        <iframe src="sketches/fractal_music/index.html"></iframe>
+    </div>
+    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
+</div>
+<!-- 
+<div class="full-width">
+    <div style="height: 60vh">
+        <iframe src="sketches/markov_music/index.html"></iframe>
+    </div>
+    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
+</div>
+
+<div class="full-width">
+    <div style="height: 60vh">
+        <iframe src="sketches/genetic_music/index.html"></iframe>
+    </div>
+    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
+</div> -->
+
+</div>
 
 <!-- Footer -->
 <footer class="content">

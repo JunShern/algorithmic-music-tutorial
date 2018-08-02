@@ -10,7 +10,7 @@ var cellWidth, cellHeight;
 var controlPanelHeight;
 
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight);
+  createCanvas(windowWidth, windowHeight);
   controlPanelHeight = height / pitches.length;
   frameRate(10);
 

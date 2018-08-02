@@ -1,6 +1,6 @@
 // Runs only once, when the page loads
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight); // Canvas size fills its container
+  createCanvas(windowWidth, windowHeight); // Canvas size fills its container
 }
 
 // Runs after setup, and repeats 60 times a second by default
