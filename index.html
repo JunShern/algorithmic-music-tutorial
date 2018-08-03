@@ -16,6 +16,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 <body>
+<script src="lib/addons/scrollMonitor.js"></script>
 
 <!-- Page Content -->
 <div id="main">
@@ -101,26 +102,34 @@ musicianA.listSongs();
 <hr style="width:200px" class="horizontal-line">
 <p>If you’ve never used <a href="https://p5js.org/">p5.js</a> before, a basic program (called a p5.js “Sketch”) generally follows the following structure:</p>
 
-<pre><code class="javascript">// Runs only once, when the page loads
+<pre><code class="javascript">var xpos = 0;
+
+// Runs only once, when the page loads
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight); // Canvas size fills its container
+  createCanvas(windowWidth, windowHeight); // Canvas size fills its container
 }
 
 // Runs after setup, and repeats 60 times a second by default
 function draw() {
   background(255, 0, 0); // Paint the background red (RGB color)
-  ellipse(width/2, height/2, 50, 50); // Draw an ellipse at the center, width = height = 50
+  ellipse(xpos, height/2, 50, 50); // Draw an ellipse with width = height = 50
+  xpos = (xpos + 1) % width; // Increase the x-position on each loop
 }
 </code></pre>
 
+<p>The setup and draw functions are special p5.js functions which are used typically for program initialization and animation respectively. In this example, the setup function simply creates a blank canvas, and the draw function draws a circle to the screen, updating its x-coordinate on every cycle.</p>
+
+<p>The output of this program looks like this:</p>
+
 <div class="full-width">
-    <div style="height: 20vh">
-        <iframe src="sketches/basic_sketch/index.html"></iframe>
+    <button class="iframe-button" onclick="startStopIframe('basic_sketch', this)">RUN</button>
+    <div style="height: 20vh" id="basic_sketch">
+        <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>A typical <a href="https://p5js.org/">p5.js</a> program, known in the p5 community as a "sketch".</p>
 </div>
 
-<p>We can set the frame rate of the draw loop using the frameRate() function, and this implies that we can get some sort of regular clock/timer using the draw loop. For example, if we wanted to make a metronome app that beeps at 60 beats-per-minute (BPM), we might do the following:</p>
+<p>To control how frequently the draw loop repeats, we can set the frame rate of the draw loop using the frameRate() function. Keeping our eyes on the goal of making music, this implies that we can get some sort of regular clock/timer using the draw loop. For example, if we wanted to make a metronome app that beeps at 60 beats-per-minute (BPM), we might do the following:</p>
 
 <pre><code class="javascript">var synth;
 var bpm = 60; // Metronome ticks at 60 beats-per-minute
@@ -134,7 +143,7 @@ function setup() {
 // Repeats 60 times a second by default
 function draw() {
   background(255); // Paint the background white
-  synth.play(440); // Play a short note at frequency 440
+  synth.play(440); // Play a short note at 440Hz
 }
 </code></pre>
 
@@ -170,8 +179,9 @@ function mySoundLoop(cycleStartTime) {
 <p>We can now compare the two approaches by listening to both metronomes together in the same sketch:</p>
 
 <div class="full-width">
-    <div style="height: 30vh">
-        <iframe src="sketches/two_clocks/index.html"></iframe>
+    <button class="iframe-button" onclick="startStopIframe('two_clocks', this)">RUN</button>
+    <div style="height: 30vh" id="two_clocks">
+        <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>Comparing the timing accuracy of the draw loop versus the SoundLoop. The loops don't necessarily start in sync; what's important is to observe the consistency in their individual cycles. Scroll away or switch focus to a different tab to see an obvious difference in behaviour!</p>
 </div>
@@ -229,8 +239,9 @@ function keyReleased() {
 <p>And the result of that would be something like this:</p>
 
 <div class="full-width">
-    <div style="height: 30vh">
-        <iframe src="sketches/virtual_piano/index.html"></iframe>
+    <button class="iframe-button" onclick="startStopIframe('virtual_piano', this)">RUN</button>
+    <div style="height: 40vh" id="virtual_piano">
+        <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>A simple virtual piano program. Type "ASDFGHJKL" to play!</p>
 </div>
@@ -389,8 +400,9 @@ function soundLoop(cycleStartTime) {
 <p>Whew. That was a bit of effort just to play a couple of notes, wasn't it? But the important thing to realize is that this is a far more powerful way of playing notes than scheduling everything at once. When we use the SoundLoop, each note only gets scheduled when it is due to be played, which means that we have the power now to interact with the music and change it as it is being produced - and that is where all the fun begins.</p>
 
 <div class="full-width">
-    <div style="height: 30vh">
-        <iframe src="sketches/array_of_notes_soundloop/index.html"></iframe>
+    <button class="iframe-button" onclick="startStopIframe('array_of_notes_soundloop', this)">RUN</button>
+    <div style="height: 40vh" id="array_of_notes_soundloop">
+        <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>Playing a sequence of notes using a SoundLoop, which allows us to start, stop, and even alter playback (eg. changing tempo) as it happens.</p>
 </div>
@@ -445,8 +457,9 @@ function draw() {
 <p>The result is this neat little interactive-music demo:</p>
 
 <div class="full-width">
-    <div style="height: 60vh">
-        <iframe src="sketches/visualize_pentatonic/index.html"></iframe>
+    <button class="iframe-button" onclick="startStopIframe('visualize_pentatonic', this)">RUN</button>
+    <div style="height: 60vh" id="visualize_pentatonic">
+        <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
 </div>
@@ -458,10 +471,11 @@ function draw() {
 <p>The code used to create this example builds upon the same ideas we have already seen so we won't go into the code in detail here, but feel free to check out the full code and remix it into your own creations!</p>
 
 <div class="full-width">
-    <div style="height: 60vh">
-        <iframe src="sketches/grid_sequencer/index.html"></iframe>
+    <button class="iframe-button" onclick="startStopIframe('grid_sequencer', this)">RUN</button>
+    <div style="height: 60vh" id="grid_sequencer">
+        <iframe src="empty_iframe.html"></iframe>
     </div>
-    <p>A step sequencer. Click on the tiles to set/unset notes, and hit PLAY to get the groove going!</p>
+    <p>A step sequencer. Click on the tiles to set/unset notes, and hit RUN to get the groove going!</p>
 </div>
 
 <h2 id="whats_next">What's Next?</h2>
@@ -485,11 +499,17 @@ function draw() {
 
 <p>This is a note.</p>
 
-Sketch - Note
+<div class="full-width">
+    <button class="iframe-button" onclick="startStopIframe('this_is_a_note', this)">RUN</button>
+    <div style="height: 50vh" id="this_is_a_note">
+        <iframe src="empty_iframe.html"></iframe>
+    </div>
+    <p>Tap anywhere on the canvas to play a note! Horizontal position controls pitch, vertical position controls velocity.</p>
+</div>
 
 <p>Notes are characterized by their pitch, velocity and timing information.</p>
 
-<p>Musical pitch refers to how high- or low-pitched the note sounds. This characteristic comes from the oscillating frequency of the sound wave producing that note.</p>
+<p><b>Musical pitch</b> refers to how high- or low-pitched the note sounds. This characteristic comes from the oscillating frequency of the sound wave producing that note.</p>
 
 <p>Frequency is a continuous value, which means that 440Hz and 440.00001Hz are both equally valid, and there are an infinite number of possible pitch frequencies. However, Western music typically restricts itself to a particular subset of standard pitch frequencies, and we give names to these standard frequencies such as “A3”, “C5”, “F#4” and so on.</p>
 
@@ -497,11 +517,9 @@ Sketch - Note
 
 Sketch - MIDI note numbers
 
-<p>The velocity of a note indicates how hard a note is struck. Primarily, this influences how loud the note is played, but depending on the implementation of your synthesizer’s instrument voice, velocity may also have an effect on timbre and other sound characteristics. For the purpose of this tutorial, we can simply think of velocity as the same thing as volume.</p>
+<p>The <b>velocity</b> of a note indicates how hard a note is struck. Primarily, this influences how loud the note is played, but depending on the implementation of your synthesizer’s instrument voice, velocity may also have an effect on timbre and other sound characteristics. For the purpose of this tutorial, we can simply think of velocity as the same thing as volume.</p>
 
-Sketch - Velocity
-
-<p>The last bit, timing information, needs to include both the attack and release times for that particular note (which can equivalently be represented as onset time and duration). This timing information can be expressed in terms of seconds or in musical time, which uses fractions relative to a composer-defined beats per minute (BPM).</p>
+<p>The last bit, <b>timing information</b>, needs to include both the attack and release times for that particular note (which can equivalently be represented as onset time and duration). This timing information can be expressed in terms of seconds or in musical time, which uses fractions relative to a composer-defined beats per minute (BPM).</p>
 
 <p>Now, if we take a sequence of notes, we get a song. In the example below, feel free to add/remove notes and play around with the note parameters to see how the song changes!</p>
 
@@ -510,32 +528,36 @@ Sketch - Note Array
 <p>Using an array of notes like the one above, we can manually compose music and ask p5.js to play it back for us. That’s great, but in the realm of computers and interactive programs, we can do so much more! </p>
 
 <div class="full-width">
-    <div style="height: 60vh">
-        <iframe src="sketches/visualize_pentatonic/index.html"></iframe>
+    <button class="iframe-button" onclick="startStopIframe('visualize_pentatonic_2', this)">RUN</button>
+    <div style="height: 60vh" id="visualize_pentatonic_2">
+        <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
 </div>
 
 <div class="full-width">
-    <div style="height: 60vh">
-        <iframe src="sketches/fractal_music/index.html"></iframe>
-    </div>
-    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
-</div>
-<!-- 
-<div class="full-width">
-    <div style="height: 60vh">
-        <iframe src="sketches/markov_music/index.html"></iframe>
+    <button class="iframe-button" onclick="startStopIframe('fractal_music', this)">RUN</button>
+    <div style="height: 60vh" id="fractal_music">
+        <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
 </div>
 
 <div class="full-width">
-    <div style="height: 60vh">
-        <iframe src="sketches/genetic_music/index.html"></iframe>
+    <button class="iframe-button" onclick="startStopIframe('markov_music', this)">RUN</button>
+    <div style="height: 60vh" id="markov_music">
+        <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
-</div> -->
+</div>
+
+<div class="full-width">
+    <button class="iframe-button" onclick="startStopIframe('genetic_music', this)">RUN</button>
+    <div style="height: 60vh" id="genetic_music">
+        <iframe src="empty_iframe.html"></iframe>
+    </div>
+    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
+</div>
 
 </div>
 

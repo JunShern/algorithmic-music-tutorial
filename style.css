@@ -92,26 +92,30 @@ iframe {
     width: 50%;
 }
 button.nav-item {
-    cursor: pointer;
     border: none;
     border-top:0.3em solid black;
+    background-color: "white";
+}
+button {
+    cursor: pointer;
+    border: 0.2em solid black;
     padding:1em 3em;
     font-family:sans-serif;
     font-weight:800;
     color:black;
     text-align:center;
     transition: all 0.15s;
-    background: transparent;
+    background: greenyellow;
 }
-button.nav-item:hover{
+button:hover{
     color:rgba(50,50,50,0.7);
     border-color:rgba(50,50,50,0.7);
 }
-button.nav-item:active{
+button:active{
     color:rgba(50,50,50,0.7);
     border-color:rgba(50,50,50,0.7);
 }
-button.nav-item:focus {
+button:focus {
     outline:0;
 }
 
