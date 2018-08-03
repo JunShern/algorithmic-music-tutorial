@@ -170,8 +170,8 @@ h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-
 
 
 OL { counter-reset: item }
-LI { display: block }
-LI:before { content: counters(item, ".") " "; counter-increment: item }
+OL LI { display: block }
+OL LI:before { content: counters(item, ".") " "; counter-increment: item }
 
 /* Collapsible */
 .collapsible {
@@ -227,4 +227,9 @@ code {
         margin-left: calc(50% - 50vw);
         width: 100vw;
     }
+}
+
+img {
+    display: block;
+    margin: auto;
 }

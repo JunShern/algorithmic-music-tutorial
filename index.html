@@ -580,9 +580,9 @@ synth.play(midiToFreq(65), 1.0, 5, 1);
     <li>Your song is done, enjoy the music!</li>
 </ol>
 
-<p>We can do something like this quite easily, by using p5 to randomly pick out a sequence of notes to construct a song. However, it turns out that randomly picking note pitches from anywhere in the spectrum sounds quite bad, and we can do better if we instead pick notes from a specific scale (subset of pitch classes). There are a lot of different possible scales we can choose from (see <a href="https://gist.github.com/gleitz/6845751">gleitz’s gist</a> for a list of scales in convenient JavaScript array format), and depending on the context of your composition you may want a scale to help convey a specific mood.</p>
+<p>We can do something like this quite easily, by using p5 to randomly pick out a sequence of notes to construct a song. However, it turns out that randomly picking note pitches from anywhere in the spectrum sounds quite bad, and we can do better if we instead pick notes from a specific scale (subset of pitch classes).</p>
 
-<p>In the example below, we use the Major Pentatonic scale:</p>
+<p>In the example below, we use the Major Pentatonic scale, but there are a lot of different possible scales we can choose from (see <a href="https://gist.github.com/gleitz/6845751">gleitz’s gist</a> for a list of scales in convenient JavaScript array format), and depending on the context of your composition you may want a scale to help convey a specific mood.</p>
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('visualize_pentatonic_2', this)">RUN</button>
@@ -594,6 +594,67 @@ synth.play(midiToFreq(65), 1.0, 5, 1);
 
 <h2 id="dice_music">Fractal Music</h2>
 <hr style="width:200px" class="horizontal-line">
+
+<p>The idea of fractals first emerged from the field of mathematics, describing a class of infinitely complicated objects possessing self-symmetry at different scales. This definition itself sounds infinitely complicated, but in fact it’s relatively easy to understand the basics (we leave the actual mathematics for another time!) once we look at some examples. </p>
+
+<p>Let’s go ahead and do that right away. Perhaps the most popular example of a fractal is the Mandelbrot set, from which the following visualization is produced:</p>
+
+<img src="mandelbrot.gif" alt="Animated GIF of Mandelbrot fractal.">
+
+<p>There are two main points of interest that we can pick out from the earlier definition:</p>
+
+<ul>
+    <li><b>Infinitely complicated</b></br>Thankfully, this doesn’t mean that fractals are impossible to understand. What it actually means is that a fractal is an infinite object, which in our case we can think of fractals as something which can generate new musical content forever. How wonderful!</li>
+    <li><b>Self-symmetry</b></br>This is more easily seen than described: In the example of the animated visualization of the Mandelbrot set above, we see that the Mandelbrot set is actually self-similar in increasingly small scales, so that when you zoom in enough you eventually see the same patterns emerge.</li>
+</ul>
+
+<p>These two properties of fractals tend to create interesting patterns, which makes them popular subjects for generating art. This more often tends to be visualizations of fractals than sonification (take a look at Dan Shiffman’s <a href="https://natureofcode.com/book/chapter-8-fractals/">excellent fractals lesson on The Nature of Code</a>), but we can just as well convert fractals to music, by mapping a fractal definition to musical information such as pitch, rhythm, or structure.</p>
+
+<p>Let’s try to create our own fractal now!</p>
+
+<p>To generate fractals, we can use something called a Lindenmayer System, or L-System for short. Our L-System will require three things:</p>
+
+<ol>
+    <li>A set of valid symbols</li>
+    <li>A set of production rules of transforming each symbol into other symbols</li>
+    <li>An initial sequence of symbols to start from</li>
+</ol>
+
+<p>For simplicity, let’s say we use a C-major triad as our set of valid symbols. We would have:</p>
+
+<pre><code>Valid symbols: C, E, G
+</code></pre>
+
+<p>We then need to define our production rules to transform one symbol into a new symbol(s). For example, an arbitrary set of rules might be:</p>
+
+<pre><code>C => G
+E => E, C
+G => C, G, E
+</code></pre>
+
+<p>And we decide to begin with just a single note, C. We then apply the following algorithm:</p>
+
+<ol>
+    <li>Repeat for as many iterations as you like:
+        <ol>
+            <li>For each note in the previous sequence
+                <ol>
+                    <li>Replace that note with the result of the production rule for that note</li>
+                </ol>
+            </li>
+        </ol>
+    </li>
+</ol>
+
+<p>Our current algorithm would result in the following:</p>
+
+<pre><code>Iteration 1: C
+Iteration 2: G
+Iteration 3: C, G, E
+Iteration 4: G, C, G, E, E, C
+Iteration 5: C, G, E, G, C, G, E, E, C, E, C, G
+… and so on.
+</code></pre>
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('fractal_music', this)">RUN</button>
