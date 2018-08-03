@@ -8,10 +8,11 @@ function setup() {
   frameRate(1);
   textAlign(CENTER, CENTER);
   noStroke();
+  noLoop();
+
   synth1 = new p5.PolySynth();
   synth2 = new p5.PolySynth();
   sloop = new p5.SoundLoop(mySoundLoop, 1);
-  sloop.start();
 }
 
 function draw() {
@@ -32,9 +33,30 @@ function draw() {
   textSize(min(width, height)/5);
   text(counter1, width*1/4, height/2);
   text(counter2, width*3/4, height/2);
+
+  if (!sloop.isPlaying) {
+    background(0, 200);
+    fill(255);
+    text("Tap to start", width/2, height/2);
+  } else {
+    textSize(min(width, height)/20);
+    text("Tap to stop", width/2, height*4/5);
+  }
 }
 
 function mySoundLoop() {
   synth2.play('E4', 0.7, 0, 0.5);
   counter2++;
+}
+
+function touchStarted() {
+  if (!sloop.isPlaying) {
+    sloop.start();
+    loop();
+  } else {
+    sloop.stop();
+    noLoop();
+    counter1 = 0;
+    counter2 = 0;
+  }
 }

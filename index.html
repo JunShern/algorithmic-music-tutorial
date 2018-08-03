@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="//toolness.github.io/p5.js-widget/p5-widget.js"></script>
 <script src="script.js"></script>
-<!-- <link rel="stylesheet" href="w3.css"> -->
+
 <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/solid.css" integrity="sha384-TbilV5Lbhlwdyc4RuIV/JhD8NR+BfMrvz4BL5QFa2we1hQu6wvREr3v6XSRfCTRp" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/fontawesome.css" integrity="sha384-ozJwkrqb90Oa3ZNb+yKFW2lToAWYdTiF1vt8JiH5ptTGHTGcN7qdoR1F95e0kYyG" crossorigin="anonymous">
@@ -33,7 +33,7 @@
 
 <button class="collapsible">About</button>
 <div class="collapsible-content">
-    <p>To do. Some preamble explaining what to expect and the target audience for this tutorial.</p>
+    <p>Hello! You've found your way to the Pitchhiker's Guide to The Algorithm. guide to Algorithmic Composition. If you've ever bobbed your head or tapped your feet to a song, there's something here for you!</p>
 </div>
 
 
@@ -62,7 +62,7 @@ musicianA.listSongs();
 
 <button class="collapsible">Contents</button>
 <div class="collapsible-content">
-    <p>To-do</p>
+    <p>If the code and concepts in Part 1 sound like Greek to you, don’t worry! You might find Part 2 more approachable, since it focuses more on the ideas than the implementation. And then, hopefully if you find yourself sufficiently motivated by the examples, you can even <a href="https://www.w3schools.com/js/js_object_constructors.asp">brush up on your Greek</a>.</p>
     <ol>
         <li><a>Part 1: About Time</a>
             <ol>
@@ -283,7 +283,7 @@ function keyReleased() {
 
 <p>This works, but an important thing to realize is that <b>once you’ve scheduled a sound to occur, you can’t stop it, alter it, or interact with it anymore</b>. This program runs through the entire loop almost immediately, locking all current and future notes into the scheduler so there's no going back.</p>
 
-<p>Imagine a case where you have composed a thumping ‘60s dance hit in your sketch, and you send it to your friend Tracy. Tracy opens up your sketch and turns it on, enjoying the music until she is rudely interrupted by the Fun Police, who remind her that <i>this is a library and you can't play music here</i>. The volume buttons on Tracy’s laptop are broken, and the strange flavor of Linux she uses doesn’t have a sound control panel. She tries to pause the music, but to her dismay she realizes that this isn’t possible because all the notes have already been scheduled to occur the moment she started the sketch. Ashamed, she hangs her head and tells them that she’s sorry, but <a href="https://www.youtube.com/watch?v=AZnt-0fEiT0">You Can’t Stop The Beat</a>.</p>
+<p>Imagine a case where you have composed a thumping ‘60s dance hit in your sketch, and you send it to your friend Tracy. Tracy opens up your sketch and turns it on, enjoying the music until she is rudely interrupted by the Fun Police, who remind her that <i>this is a library and you can't play music here</i>. The volume buttons on Tracy’s laptop are broken, and the strange flavor of Linux she uses doesn’t have a sound control panel. She tries to pause the music, but to her dismay she realizes that this isn’t possible because all the notes have already been scheduled to occur the moment she started the sketch. Ashamed, she hangs her head and tells them that she’s sorry, but <a href="https://www.youtube.com/watch?v=AZnt-0fEiT0"><i>you can't stop the beat</i></a>.</p>
 
 <p>While your users may never face this exact situation, in many cases you might realize that you don’t actually want to schedule all notes right away, and in the case of interactive music we need to be able to alter, add and remove notes on the fly according to your interactions. To add this interactivity, we turn to our trusty ol’ SoundLoop.</p>
 
@@ -494,7 +494,7 @@ function draw() {
 <h1 id="alg_comp">Part 2: Algorithmic Composition</h1>
 <hr style="width:200px" class="horizontal-line">
 
-<h2 id="whats_next">The Building Blocks of Music</h2>
+<h2 id="building_blocks">The Building Blocks of Music</h2>
 <hr style="width:200px" class="horizontal-line">
 
 <p>This is a note.</p>
@@ -513,27 +513,87 @@ function draw() {
 
 <p>Frequency is a continuous value, which means that 440Hz and 440.00001Hz are both equally valid, and there are an infinite number of possible pitch frequencies. However, Western music typically restricts itself to a particular subset of standard pitch frequencies, and we give names to these standard frequencies such as “A3”, “C5”, “F#4” and so on.</p>
 
-<p>Pitch names like “D#4” may be familiar to you depending on how comfortable you are with music theory, but if you don’t know your sharps from your flats, fret not! There is an alternate naming scheme called MIDI note numbers, which simply labels each standard frequency with a number which increases as the pitch gets higher. Easy, right?</p>
+<p>Pitch names like “D#4” may be familiar to you depending on how comfortable you are with music theory, but if you don’t know your sharps from your flats, fret not! There is an alternate naming scheme called MIDI note numbers, which simply labels each standard frequency with a number which increases as the pitch gets higher.</p>
 
-Sketch - MIDI note numbers
+<p>By using MIDI note numbers, we don't need to remember specific pitch frequencies or formulae; MIDI numbers also possess easy mathematical shortcuts as well - for example, to go up or down an octave we simply add 12 to the MIDI note!</p>
+
+<p>Easy, right?</p>
+
+<div class="full-width">
+    <button class="iframe-button" onclick="startStopIframe('midi_note_numbers', this)">RUN</button>
+    <div style="height: 80vh" id="midi_note_numbers">
+        <iframe src="empty_iframe.html"></iframe>
+    </div>
+    <p>MIDI note numbers make it easier for digital musicians to work with musical pitches. Try clicking on each of the notes to get a feel of how MIDI numbers affect pitch! (Depending on your speakers/headphones, certain low- or high-frequency pitches may not sound so clear. Notes around MIDI number 70 generally show up clearly on laptop speakers.)</p>
+</div>
 
 <p>The <b>velocity</b> of a note indicates how hard a note is struck. Primarily, this influences how loud the note is played, but depending on the implementation of your synthesizer’s instrument voice, velocity may also have an effect on timbre and other sound characteristics. For the purpose of this tutorial, we can simply think of velocity as the same thing as volume.</p>
 
 <p>The last bit, <b>timing information</b>, needs to include both the attack and release times for that particular note (which can equivalently be represented as onset time and duration). This timing information can be expressed in terms of seconds or in musical time, which uses fractions relative to a composer-defined beats per minute (BPM).</p>
 
-<p>Now, if we take a sequence of notes, we get a song. In the example below, feel free to add/remove notes and play around with the note parameters to see how the song changes!</p>
+<p>With just these three simple properties, we actually have everything we need to get started making music. We can start with a single note:</p>
 
-Sketch - Note Array
+<pre><code class="javascript">var synth;
 
-<p>Using an array of notes like the one above, we can manually compose music and ask p5.js to play it back for us. That’s great, but in the realm of computers and interactive programs, we can do so much more! </p>
+function setup() {
+  noCanvas();
+  synth = new p5.PolySynth();
+  var midiNoteNumber = 70;
+  var freq = midiToFreq(midiNoteNumber); // Convert MIDI note to frequency
+  // Play note number 70 with velocity 1, starting now, for a duration of 1s
+  synth.play(freq, 1.0, 0, 1);
+}
+</code></pre>
+
+<p>And we can add more <code>synth.play()</code> functions to produce a series of notes that generate a song (see Part 1: About Time for a better way to do this):</p>
+
+<pre><code class="javascript">
+synth.play(midiToFreq(60), 1.0, 0, 1);
+synth.play(midiToFreq(62), 1.0, 1, 1);
+synth.play(midiToFreq(64), 1.0, 2.5, 1);
+synth.play(midiToFreq(65), 1.0, 5, 1);
+// ... and so on
+</code></pre>
+
+<p>Which works, but it quickly becomes very tedious to type out every note one by one. In the age of computers and interactive programs, why should we do all the hard work? Can't we design computer programs that compose and play music for us?</p>
+
+<p>It turns out, <i>yes we can</i>.</p>
+
+<h2 id="dice_music">Dice Music</h2>
+<hr style="width:200px" class="horizontal-line">
+
+<p>An algorithm is a set of steps that can be followed to perform a certain task (a common analogy for this is a cooking recipe). In our case, we want to use algorithms which can be followed by a computer so that the computer may compose new music for us. However, algorithms are not limited only to computer programs, and humans have in fact been using algorithms to compose music for centuries!</p>
+
+<p>The <i>Musikalisches Würfelspiel</i> (German for “musical dice game”) was popular in the 18th century for adding an element of chance to music composition. Typically, composers would prepare a set of musical phrases and use a dice to randomly put them in sequence.</p>
+
+<p>In its simplest form, the algorithm might look something like this:</p>
+
+<ol>
+    <li>Prepare a palette of musical phrases or notes which we can choose from.</li>
+    <li>Start with an empty song.</li>
+    <li>If the song is shorter than your desired length:
+        <ol>
+            <li>Randomly select a piece of music from the palette, and add it to the song.</li>
+            <li>Repeat Step 3.</li>
+        </ol>
+    </li>
+    <li>Your song is done, enjoy the music!</li>
+</ol>
+
+<p>We can do something like this quite easily, by using p5 to randomly pick out a sequence of notes to construct a song. However, it turns out that randomly picking note pitches from anywhere in the spectrum sounds quite bad, and we can do better if we instead pick notes from a specific scale (subset of pitch classes). There are a lot of different possible scales we can choose from (see <a href="https://gist.github.com/gleitz/6845751">gleitz’s gist</a> for a list of scales in convenient JavaScript array format), and depending on the context of your composition you may want a scale to help convey a specific mood.</p>
+
+<p>In the example below, we use the Major Pentatonic scale:</p>
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('visualize_pentatonic_2', this)">RUN</button>
     <div style="height: 60vh" id="visualize_pentatonic_2">
         <iframe src="empty_iframe.html"></iframe>
     </div>
-    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
+    <p>An example of using randomness in music composition. Notes are produced randomly from the Major Pentatonic scale, but you can move your cursor around the sketch to transpose up and down octaves.</p>
 </div>
+
+<h2 id="dice_music">Fractal Music</h2>
+<hr style="width:200px" class="horizontal-line">
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('fractal_music', this)">RUN</button>
@@ -543,6 +603,9 @@ Sketch - Note Array
     <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
 </div>
 
+<h2 id="dice_music">Markov Music</h2>
+<hr style="width:200px" class="horizontal-line">
+
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('markov_music', this)">RUN</button>
     <div style="height: 60vh" id="markov_music">
@@ -550,6 +613,9 @@ Sketch - Note Array
     </div>
     <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
 </div>
+
+<h2 id="dice_music">Genetic Music</h2>
+<hr style="width:200px" class="horizontal-line">
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('genetic_music', this)">RUN</button>

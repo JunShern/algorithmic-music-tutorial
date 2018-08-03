@@ -5,7 +5,7 @@ var velocity = 0.7;
 var lastX, lastY;
 
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight);
+  createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   colorMode(HSB, 255);
   synth = new p5.PolySynth();
@@ -14,7 +14,7 @@ function setup() {
 }
 
 function draw() {
-  background(235);
+  background(245);
   var hue = map(freq, 400, 2000, 0, 255);
   var diameter = map(velocity, 0.1, 1, height/20, height/2);
   noStroke();
