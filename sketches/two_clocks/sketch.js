@@ -11,7 +11,7 @@ function setup() {
   synth1 = new p5.PolySynth();
   synth2 = new p5.PolySynth();
   sloop = new p5.SoundLoop(mySoundLoop, 1);
-  noLoop();
+  sloop.start();
 }
 
 function draw() {

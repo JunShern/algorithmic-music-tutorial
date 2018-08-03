@@ -27,7 +27,7 @@ var maxSequenceLength = 25;
 var pitch = 60;
 
 function setup() {
-  createCanvas(720, 400);
+  createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   textFont('monospace');
   textSize(fontSize);
@@ -38,10 +38,10 @@ function setup() {
   sloop = new p5.SoundLoop(soundLoop, 0.5);
 
   playPauseButton = createButton('Play/Pause');
-  playPauseButton.position(width - 80, height - 20);
+  playPauseButton.position(width - 2*playPauseButton.size().width, height - 2*playPauseButton.size().height);
   playPauseButton.mousePressed(togglePlayPause);
   stepButton = createButton("Step");
-  stepButton.position(10, height - 20);
+  stepButton.position(2*stepButton.size().width, height - 2*stepButton.size().height);
   stepButton.mousePressed(stepSoundLoop)
 }
 
