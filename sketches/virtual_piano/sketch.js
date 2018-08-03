@@ -33,27 +33,45 @@ function draw() {
 }
 
 function keyPressed() {
-  keyIndex = keyOrder.indexOf(key);
+  var keyIndex = keyOrder.indexOf(key);
   // Check if valid note key pressed
   if (keyIndex >= 0) {
     // Update key state
     keyStates[keyIndex] = 1;
     // Play synth
-    midiNoteNumber = baseNote + keyIndex; // 0-127; 60 is Middle C (C4)
-    freq = midiToFreq(midiNoteNumber);
+    var midiNoteNumber = baseNote + keyIndex; // 0-127; 60 is Middle C (C4)
+    var freq = midiToFreq(midiNoteNumber);
     synth.noteAttack(freq, velocity, 0);
   }
 }
 
 function keyReleased() {
-  keyIndex = keyOrder.indexOf(key);
+  var keyIndex = keyOrder.indexOf(key);
   // Check if valid note key pressed
   if (keyIndex >= 0) {
     // Update key state
     keyStates[keyIndex] = 0;
     // Stop synth
-    midiNoteNumber = baseNote + keyIndex; // 0-127; 60 is Middle C (C4)
-    freq = midiToFreq(midiNoteNumber);
+    var midiNoteNumber = baseNote + keyIndex; // 0-127; 60 is Middle C (C4)
+    var freq = midiToFreq(midiNoteNumber);
     synth.noteRelease(freq, 0);
   }
+}
+
+function touchStarted() {
+  var keyWidth = width / keyStates.length;
+  var keyIndex = floor(mouseX / keyWidth);
+  // Update key state
+  keyStates[keyIndex] = 1;
+  // Play synth
+  var midiNoteNumber = baseNote + keyIndex; // 0-127; 60 is Middle C (C4)
+  var freq = midiToFreq(midiNoteNumber);
+  synth.noteAttack(freq, velocity, 0);
+}
+
+function touchEnded() {
+  for (var i=0; i<keyStates.length; i++) {
+    keyStates[i] = 0;
+  }
+  synth.noteRelease();
 }
