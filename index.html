@@ -632,26 +632,30 @@ synth.play(midiToFreq(65), 1.0, 5, 1);
     <li>An <b>initial sequence</b> of symbols to start from</li>
 </ol>
 
-<p>For simplicity, let’s say we use a C-major triad as our set of <b>valid symbols</b>. We would have:</p>
+<p>For simplicity, let’s say we use a handful of notes from the C major scale as our set of <b>valid symbols</b>. Let's take:</p>
 
-<pre><code>Valid symbols: C, E, G
+<pre><code>Symbols: A, C, E, F, G
 </code></pre>
 
 <p>We then need to define our <b>production rules</b> to transform one symbol into a new symbol(s). For example, an arbitrary set of rules might be:</p>
 
-<pre><code>C => G
-E => E, C
-G => C, G, E
+<pre><code>A => C, F, E
+C => G, E
+E => C, G
+F => A, C
+G => E, F, C
 </code></pre>
 
 <p>Our <b>initial sequence</b> can be any of the valid symbols, even just a single C note. We then apply the following algorithm:</p>
 
 <ol>
+    <li>Start with the initial sequence</li>
     <li>Repeat for as many iterations as you like:
         <ol>
-            <li>For each note in the previous sequence
+            <li>Begin a new empty sequence.</li>
+            <li>For each note in the previous sequence:
                 <ol>
-                    <li>Replace that note with the result of the production rule for that note</li>
+                    <li>Add the result of its production rule to the new sequence.</li>
                 </ol>
             </li>
         </ol>
@@ -661,12 +665,15 @@ G => C, G, E
 <p>Our current algorithm would result in the following:</p>
 
 <pre><code>Iteration 1: C
-Iteration 2: G
-Iteration 3: C, G, E
-Iteration 4: G, C, G, E, E, C
-Iteration 5: C, G, E, G, C, G, E, E, C, E, C, G
+Iteration 2: G, E
+Iteration 3: E, F, C, C, G
+Iteration 4: C, G, A, C, G, E, G, E, E, F, C
 … and so on.
 </code></pre>
+
+<p>Notice that our current strategy doesn't say anything about the durations of each note. It is entirely possible (and you should try this!) to come up with a fractal algorithm which generates timing and even velocity information as well, but for now we can quickly add some variety to our music by randomly assigning durations of either a whole-beat, half-beat, or quarter-beat to each note.</p>
+
+<p>Check out the sketch below to see our algorithm at work!</p>
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('fractal_music', this)">RUN</button>
@@ -745,33 +752,90 @@ Iteration 5: C, G, E, G, C, G, E, E, C, E, C, G
 
 <p>On top of that, they’re relatively straightforward and intuitive to understand.</p>
 
-<p>Let’s say we want to model Twinkle, Twinkle, Little Star. The MIDI notes for the song starting at Middle C (MIDI number 60) is:</p>
+<p>Let’s say we want to model Twinkle, Twinkle, Little Star. The MIDI notes for the song starting at MIDI number 60 (Middle C) is:</p>
 
-<pre><code>60, 60, 64, 64, 67, 67, 64, rest, 65, 65, 64, 64, 62, 62, 60</code></pre>
+<pre><code>60, 60, 64, 64, 67, 67, 64, Rest, 65, 65, 64, 64, 62, 62, 60</code></pre>
 
-<p>To build our Markov chain, it helps to write out a transition table which lists all the transitions that each note has made in the past:</p>
+<p>To build our Markov chain, it helps to write out a <b>transition table</b> which lists all the transitions that each note has made in the past:</p>
 
 <pre><code>60: 60, 64
 62: 62, 60
 64: 64, 67, rest, 64, 62
 65: 65, 64
 67: 67, 64
-rest: 65
+Rest: 65
 </code></pre>
 
-<p>We can also illustrate this as a network of nodes (states) and edges (transitions between states), known in computer science-speak as a graph:</p>
+<p>We can also illustrate this as a network of <b>nodes</b> (states) and <b>edges</b> (transitions between states), known in computer science-speak as a <a href="https://www.khanacademy.org/computing/computer-science/algorithms/graph-representation/a/describing-graphs">graph</a>:</p>
 
-Diagram / sketch of graph
+<img src="markov_graph.svg" alt="Diagram of Markov chain.">
 
-<p>Now, when we want to predict the next note of a sequence, we simply look up our most recent note in the transition table and pick a random transition to one the possible next-states! For example, if we want to generate a new sequence beginning with 67, the next note that we choose could be either 67 again, or 64 (with equal probability). Then, we simply continue transition from state-to-state following the graph above, and can generate sequences for as long as we like.</p>
+<p>When we want to predict the next note of a sequence, we simply look up our most recent note in the transition table and pick a random transition to one the possible next-states! For example, if we want to generate a new sequence beginning with 67, the next note that we choose could be either 67 again, or 64 (with equal probability). Then, we simply continue transition from state-to-state following the graph above, and can generate sequences for as long as we like.</p>
 
 <p>One problem with this current implementation though, is that we can only produce monophonic (single voice) music. To support polyphony, we need to change our data representation of each state from a single note with fixed duration, to each state being either a note-on or note-off event (like we saw previously in About Time). By using note-on and note-off events as states, we can have a chance of reaching multiple note-on states we have to turn the notes off, hence allowing multiple notes to sound at once.</p>
 
 <p>Let’s try to put all this into practice now!</p>
 
-<p>We’ll create an example which records what a user plays into a virtual piano, and uses that information to build a Markov chain on the fly. After recording, the Markov chain can generate new music by randomly traversing the graph.</p>
+<p>We’ll create an example which records what a user plays through the keyboard, and uses that information to build a Markov chain on the fly.</p>
 
 <p>Each state in the Markov chain contains information about the pitch, event type (note-on or note-off), as well as time since the previous event. The code used to register the user’s input into these states is shown below:</p>
+
+<pre><code>function keyPressed() {
+  var keyIndex = keyOrder.indexOf(key);
+  // Check if valid note key pressed
+  if (keyIndex &gt;= 0) {
+    // Play synth
+    var midiNoteNumber = baseNote + keyScale[keyIndex]; // 0-127; 60 is Middle C (C4)
+    var freq = midiToFreq(midiNoteNumber);
+    synth.noteAttack(freq, velocity, 0);
+    // Register node
+    graph.registerNewNode(1, midiNoteNumber, ticksSincePrevEvent); //keyStates[keyIndex]);
+    // Activate key state
+    keyStates[keyIndex] = 1;
+  }
+  ticksSincePrevEvent = 0;
+}
+
+function keyReleased() {
+  var keyIndex = keyOrder.indexOf(key);
+  // Check if valid note key pressed
+  if (keyIndex &gt;= 0) {
+    // Stop synth
+    midiNoteNumber = baseNote + keyScale[keyIndex]; // 0-127; 60 is Middle C (C4)
+    freq = midiToFreq(midiNoteNumber);
+    synth.noteRelease(freq, 0);
+    // Register node
+    graph.registerNewNode(0, midiNoteNumber, ticksSincePrevEvent);
+    // Reset key state
+    keyStates[keyIndex] = 0;
+  }
+  ticksSincePrevEvent = 0;
+}
+</code></pre>
+
+<p>After recording, the Markov chain can generate new music by randomly traversing the graph:</p>
+
+<pre><code>function soundLoop(cycleStartTime) {
+  // Play the sound of this node
+  var midiNoteNumber = graph.nodes[latestNodeId].pitch;
+  var freq = midiToFreq(midiNoteNumber);
+  var type = graph.nodes[latestNodeId].type;
+  if (type == 1) {
+    synth.noteAttack(freq, velocity, cycleStartTime);
+  } else {
+    synth.noteRelease(freq, cycleStartTime);
+  }
+  // Transition to a random new node
+  if (graph.edges[latestNodeId].length) {
+    latestNodeId = random(graph.edges[latestNodeId]);
+  }
+  // Wait for the timeFromPrevEvent of the new node
+  var duration = graph.nodes[latestNodeId].duration * secondsPerTick;
+  this.interval = max(duration, 0.01); // Cannot have interval of exactly 0
+}
+</code></pre>
+
+<p>And that's about it! The full example is shown below:</p>
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('markov_music', this)">RUN</button>

@@ -11,20 +11,22 @@
  */
 
 var rules = {
-  "+":["+","-"],
-  "-":["+"]
+  "A":["C","F","E"],
+  "C":["G","E"],
+  "E":["C","G"],
+  "F":["A","C"],
+  "G":["E","F","C"]
 };
 var seqIndex = 0;
 var noteIndex = -1;
-var initSeq = ["+","-","+"];
+var initSeq = ["C"];
 var newTokens = [];
 var generatingTokenColor;
 var newTokenColor;
 var sequences = [initSeq, []];
 var fontSize = 20;
 var maxNumSequences = 8;
-var maxSequenceLength = 25;
-var pitch = 60;
+var maxSequenceLength = 30;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -35,7 +37,7 @@ function setup() {
   newTokenColor  = color(240);
 
   synth = new p5.PolySynth();
-  sloop = new p5.SoundLoop(soundLoop, 0.5);
+  sloop = new p5.SoundLoop(soundLoop, 0.7);
 
   playPauseButton = createButton('Play/Pause');
   playPauseButton.position(width - 2*playPauseButton.size().width, height - 2*playPauseButton.size().height);
@@ -50,19 +52,15 @@ function soundLoop(cycleStartTime) {
   if (noteIndex >= min(sequences[seqIndex].length, maxSequenceLength)) {
     nextSequence();
   }
+  var token = sequences[seqIndex][noteIndex];
 
-  var beatSeconds = 0.5; // Define 1 beat as half a second
-  if (sequences[seqIndex][noteIndex] === "+") {
-    pitch++;
-  } else {
-    pitch--;
-  }
+  var pitch = token + "4";
   var velocity = 0.8;
+  var beatSeconds = 0.5; // Define 1 beat as half a second
   var duration = random([beatSeconds, beatSeconds/2, beatSeconds/2, beatSeconds/4]);
   this.interval = duration;
-  synth.play(midiToFreq(pitch), velocity, cycleStartTime, duration);
+  synth.play(pitch, velocity, cycleStartTime, duration);
 
-  var token = sequences[seqIndex][noteIndex];
   newTokens = rules[token];
   sequences[seqIndex+1] = sequences[seqIndex+1].concat(newTokens);
   // If the sequence overruns maxSequenceLength, truncate it and proceed to next sequence
@@ -91,10 +89,6 @@ function draw() {
     var lineHeight = fontSize + 10;
     text(seq.join(" "), width/2, height*2/3 - lineHeight * (sequences.length - i - 1));
   }
-
-  // Display current pitch
-  fill(100);
-  text("Pitch: " + pitch, width/2, height-20);
 }
 
 function togglePlayPause() {
@@ -115,7 +109,7 @@ function stepSoundLoop() {
 function nextSequence() {
   noteIndex = 0;
   seqIndex++;
-  sequences.push(rules[sequences[seqIndex][0]]); // Add a new sequence with the first tokens generated
+  sequences.push([]); // Add a new empty sequence
   // If the number of sequences overruns maxNumSequences, remove oldest
   if (sequences.length > maxNumSequences) {
     seqIndex--;

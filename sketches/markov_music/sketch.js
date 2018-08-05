@@ -142,10 +142,14 @@ function Node(id, type, pitch, duration) {
   this.color = [255, 0, 100];
   this.diameter = 10;
   this.position = createVector(width/2 + random(-100,100), height/2 + random(-100,100));
-  this.velocity = createVector(random(-1,1), random(-1,1));
+  this.velocity = createVector(0, 0);//createVector(random(-1,1), random(-1,1));
   this.type = type; // 1 (note on) or 0 (note off)
   this.pitch = pitch;
   this.duration = duration;
+
+  var minPitch = baseNote;
+  var maxPitch = baseNote + max(keyScale);
+  this.position = createVector(width/40 + map(pitch, minPitch, maxPitch, 0, width-width/20), random(height));
 }
 Node.prototype.isSimilar = function(node) {
   var squaredDist = (this.type - node.type)**2 + (this.pitch - node.pitch)**2 + (this.duration - node.duration)**2;
