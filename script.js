@@ -1,5 +1,10 @@
 // Handle tabs
-function openPage(pageName, elmnt) {
+function openPage(pageName, elmnt, locationHash) {
+    // Change location hash if we are clicking on the tabs
+    var locationHash = locationHash || false;
+    if (locationHash) {
+        window.location.hash = locationHash;
+    }
     // Hide all elements with class="tabcontent" by default */
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tab_content");
@@ -68,17 +73,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Open the default tab
-    document.getElementById("default_open").click();
-
     // Add scrollwatchers to all sketches
     var sketch_containers = document.querySelectorAll('.full-width');
     for (var i=0; i<sketch_containers.length; i++) {
         var elementWatcher = scrollMonitor.create(sketch_containers[i]);
         elementWatcher.fullyEnterViewport(function() {
             var div = this.watchItem;
+            var iframe = div.querySelector('iframe');
+            iframe.onload = function() { this.contentWindow.focus() };
             var button = div.querySelector('.iframe-button');
             button.click();
         });
+    }
+
+    // Open the default tab
+    if (window.location.hash.includes("composition")) {
+        openPage("composition_tab", document.getElementById("composition_button"));
+    } else {
+        openPage("about_time_tab", document.getElementById("time_button"));
     }
 }, false);

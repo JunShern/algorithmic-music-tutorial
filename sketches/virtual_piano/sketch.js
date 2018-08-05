@@ -5,7 +5,7 @@ var keyOrder = "ASDFGHJKL";
 var keyStates = [0,0,0,0,0,0,0,0,0];
 
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight);
+  createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
   strokeWeight(3);
   // Create synth voice
@@ -18,9 +18,9 @@ function draw() {
 	for (var i=0; i<keyStates.length; i++) {
 		var keyColor;
 		if (keyStates[i] === 1) {
-			keyColor = color(255,100,100);
+			keyColor = color(255,220,120);
 		} else {
-			keyColor = color(245,225,225);
+			keyColor = color(150,230,245);
 		}
 		fill(keyColor);
     stroke(255);

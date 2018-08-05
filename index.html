@@ -85,8 +85,8 @@ musicianA.listSongs();
 </div>
 
 <nav>
-    <button class="nav-item" id="default_open" onclick="openPage('about_time_tab', this)">ABOUT TIME</button>
-    <button class="nav-item" onclick="openPage('alg_comp_tab', this)">ALGORITHMIC COMPOSITION</button>
+    <button class="nav-item" id="time_button" onclick="openPage('about_time_tab', this, 'about_time')">ABOUT TIME</button>
+    <button class="nav-item" id="composition_button" onclick="openPage('composition_tab', this, 'algorithmic_composition')">ALGORITHMIC COMPOSITION</button>
 </nav>
 
 <div class="content">
@@ -94,13 +94,14 @@ musicianA.listSongs();
 <div id="about_time_tab" class="tab_content">
 <h1 id="about_time">Part 1: About Time!</h1>
 <hr style="width:200px" class="horizontal-line">
+
 <p>When dealing with musical applications, we need to pay special attention to the aspect of timing. More so than in other channels like visual information, humans are sensitive to sound - and can detect discrepancies at millisecond resolutions.</p>
 
 <p>This means that when developing music applications, we need to make sure that we can accurately schedule sounds when we want them to happen, and have the computer reliably play back those sounds when we expect them to.</p>
 
-<h2 id="the_problem">The Problem</h2>
+<h2 id="time_problem">The Problem</h2>
 <hr style="width:200px" class="horizontal-line">
-<p>If you’ve never used <a href="https://p5js.org/">p5.js</a> before, a basic program (called a p5.js “Sketch”) generally follows the following structure:</p>
+<p>A basic <a href="https://p5js.org/">p5.js</a> program (called a "sketch") generally has a <code>setup</code> function that runs once, and a <code>draw</code> loop that repeats at a certain frame rate.</p>
 
 <pre><code class="javascript">var xpos = 0;
 
@@ -113,23 +114,30 @@ function setup() {
 function draw() {
   background(255, 0, 0); // Paint the background red (RGB color)
   ellipse(xpos, height/2, 50, 50); // Draw an ellipse with width = height = 50
-  xpos = (xpos + 1) % width; // Increase the x-position on each loop
+
+  // Increase the x-position on each loop
+  xpos = xpos + 1;
+  // Reset the x-position if it reaches the edge
+  if (xpos > width) {
+      xpos = 0;
+  }
 }
 </code></pre>
 
-<p>The setup and draw functions are special p5.js functions which are used typically for program initialization and animation respectively. In this example, the setup function simply creates a blank canvas, and the draw function draws a circle to the screen, updating its x-coordinate on every cycle.</p>
+<p>The setup and draw functions are special p5.js functions which are used typically for program initialization and animation respectively. In this example, the setup function simply creates a blank canvas, and the draw function draws a circle to the screen, updating its x-coordinate on every cycle (according to the <a href="https://p5js.org/reference/#/p5/frameRate">frameRate</a>).</p>
 
 <p>The output of this program looks like this:</p>
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('basic_sketch', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/basic_sketch/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
     <div style="height: 20vh" id="basic_sketch">
         <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>A typical <a href="https://p5js.org/">p5.js</a> program, known in the p5 community as a "sketch".</p>
 </div>
 
-<p>To control how frequently the draw loop repeats, we can set the frame rate of the draw loop using the frameRate() function. Keeping our eyes on the goal of making music, this implies that we can get some sort of regular clock/timer using the draw loop. For example, if we wanted to make a metronome app that beeps at 60 beats-per-minute (BPM), we might do the following:</p>
+<p>To control how frequently the draw loop repeats, we can set the frame rate of the draw loop using the <a href="https://p5js.org/reference/#/p5/frameRate">frameRate()</a> function. Keeping our eyes on the goal of making music, this implies that we can get some sort of regular clock/timer using the draw loop. For example, if we wanted to make a metronome app that beeps at 60 beats-per-minute (BPM), we might do the following:</p>
 
 <pre><code class="javascript">var synth;
 var bpm = 60; // Metronome ticks at 60 beats-per-minute
@@ -149,10 +157,9 @@ function draw() {
 
 <p>However, there’s a problem with this approach, which is that the draw loop was not designed for timing-critical applications. Therefore, the frame rate we set may not be strictly adhered to - the loop may run slower if for example the draw loop has a large amount of graphics to render or your browser is running many active tabs.</p>
 
-
-<h2 id="the_solution">The Solution</h2>
+<h2 id="time_solution">The Solution</h2>
 <hr style="width:200px" class="horizontal-line">
-<p>To handle the need for precise audio scheduling, the p5-sound library offers an alternative scheduling mechanism called the SoundLoop. Using the SoundLoop, we can build a metronome as before, with just a slight change in code:</p>
+<p>To handle the need for precise audio scheduling, the p5-sound library offers an alternative scheduling mechanism called the <a href="https://p5js.org/reference/#/p5.SoundLoop">SoundLoop</a>. Using the SoundLoop, we can build a metronome as before, with just a slight change in code:</p>
 
 <pre><code class="javascript">var synth;
 var sloop;
@@ -174,12 +181,13 @@ function mySoundLoop(cycleStartTime) {
 }
 </code></pre>
 
-<p>Notice that in this case, there is no more draw loop - the draw loop is optional if we are only using sound, but in many cases it will be useful to have both the SoundLoop and draw loop, to handle audio and visuals respectively.</p>
+<p>The SoundLoop introduces a couple of new concepts which we will go into much more detail on <a href="#dynamic_scheduling">later in this tutorial</a>, but for now, notice that in this case there is no more draw loop - the draw loop is optional if we are only using sound, but in many cases it will be useful to have both the SoundLoop and draw loop, to handle audio and visuals respectively.</p>
 
-<p>We can now compare the two approaches by listening to both metronomes together in the same sketch:</p>
+<p>To convince ourselves that the SoundLoop is better for scheduling audio, let's compare the two approaches by listening to both metronomes together in the same sketch:</p>
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('two_clocks', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/two_clocks/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
     <div style="height: 30vh" id="two_clocks">
         <iframe src="empty_iframe.html"></iframe>
     </div>
@@ -189,21 +197,19 @@ function mySoundLoop(cycleStartTime) {
 <p>Notice that when you first start the sketch, the two tones are in sync, but after some time they start to have a perceptible drift in timing, especially if you scroll away or switch to a different tab (the browser allocates fewer resources to unfocused tabs, so the draw loop is neglected). The difference may be more or less obvious depending on your processor speed, but in general the SoundLoop will always be more reliable for scheduling sounds than the draw loop. This is because the SoundLoop is built on Web Audio clock, which you can find out more about in <a href="https://www.html5rocks.com/en/tutorials/audio/scheduling/">this article by Chris Wilson</a>.</p>
 
 
-<h2 id="time_management">Time Management In Practice</h2>
+<h2 id="time_best_practices">Best Practices for Musical Timing</h2>
 <hr style="width:200px" class="horizontal-line">
-<p>So now, we have some inkling of how to build p5.js sketches with accurate timing information. But how do we go from the simple metronome example to that supercalifabuloustic-interactive-musical-journey you have in your head?</p>
+<p>So now, we have some inkling of how to build p5.js sketches with accurate timing information. But how do we go from our humble metronome to that supercalifabuloustic-interactive-musical-journey you have in your head?</p>
 
-<p>As is often the case, <i>it depends</i>.</p>
+<p>Perhaps the best way to answer this is to look at some best practices for different musical timing use cases.</p>
 
-<p>It depends on what type of interactions you need from your program, between the user and the sound or between the sound and other components of the program. The best way to see this is by looking at some examples.</p>
+<h3 id="time_instantaneous">Instantaneous Reaction</h3>
 
-<h3 id="instantaneous_reaction">Instantaneous Reaction</h3>
+<p>One of the most common use cases for audio in programs is as instantaneous feedback for user interactions. Whether you’re working on a 2018 revamp of Space Invaders which goes <i>ZZZZOOP</i> on every laser fired, or a simple navigation menu whose buttons <i>BOOP</i>, you’re going to want to set up your sounds to be triggered instantaneously based on certain events.</p>
 
-<p>One of the most common use-cases for audio in programs is just as instantaneous feedback for user interactions. Whether you’re working on a 2018 revamp of Space Invaders which goes <i>ZZZZOOP</i> on every laser fired, or a simple navigation menu whose buttons <i>BOOP</i>, you’re going to want to set up your sounds to be triggered instantaneously based on certain events.</p>
+<p>In this basic type of scenario, there is no need for the SoundLoop or any advanced scheduling. All we need to do is simply instantiate our sound object in setup, and play that sound in the event handler.</p>
 
-<p>In this basic type of scenario, there is no need for the SoundLoop or any advanced scheduling. All we need to do is simply instantiate our sound object in setup, and play that sound in the trigger-event’s callback function.</p>
-
-<p>We will explore such a scenario in the context of creating a virtual piano application. For our virtual piano, we will use a PolySynth object to produce sounds, and the keyPressed and keyReleased events to start and stop the sounds. The relevant part of the code looks like this:</p>
+<p>We will explore such a scenario in the context of creating a virtual piano application. For our virtual piano, we will use a PolySynth object to produce sounds, and the keyPressed and keyReleased events to start and stop the sounds:</p>
 
 <pre><code class="javascript">var synth;
 var keyOrder = &quot;ASDFGHJKL&quot;;
@@ -240,17 +246,18 @@ function keyReleased() {
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('virtual_piano', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/virtual_piano/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
     <div style="height: 40vh" id="virtual_piano">
         <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>A simple virtual piano program. Type "ASDFGHJKL" to play!</p>
 </div>
 
-<h3 id="sequence_of_notes">Playing A Sequence of Notes (Static Scheduling)</h3>
+<h3 id="time_static_scheduling">Playing A Sequence of Notes (Static Scheduling)</h3>
 
-<p>In another situation, directly relevant to interactive and algorithmic music composition, we might want to play a sequence of notes. </p>
+<p>In another situation, directly relevant to interactive and algorithmic music composition, we might want to play a sequence of notes.</p>
 
-<p>For example, let's say you want your sketch to play Twinkle Twinkle Little Star. First, you need to figure out how to represent your sequence of notes. There are a great many ways to do this, but perhaps one of the most intuitive representations is to just list out all the notes along with their velocity and timing information, like so:</p>
+<p>For example, let's say you want your sketch to play Mary Had A Little Lamb. First, you need to figure out how to represent your sequence of notes. There are a great many ways to do this, but perhaps one of the most intuitive representations is to just list out all the notes along with their velocity and timing information, like so:</p>
 
 <pre><code class="javascript">var song = [ 
   // Note pitch, velocity (between 0-1), start time (s), note duration (s)
@@ -283,13 +290,13 @@ function keyReleased() {
 
 <p>This works, but an important thing to realize is that <b>once you’ve scheduled a sound to occur, you can’t stop it, alter it, or interact with it anymore</b>. This program runs through the entire loop almost immediately, locking all current and future notes into the scheduler so there's no going back.</p>
 
-<p>Imagine a case where you have composed a thumping ‘60s dance hit in your sketch, and you send it to your friend Tracy. Tracy opens up your sketch and turns it on, enjoying the music until she is rudely interrupted by the Fun Police, who remind her that <i>this is a library and you can't play music here</i>. The volume buttons on Tracy’s laptop are broken, and the strange flavor of Linux she uses doesn’t have a sound control panel. She tries to pause the music, but to her dismay she realizes that this isn’t possible because all the notes have already been scheduled to occur the moment she started the sketch. Ashamed, she hangs her head and tells them that she’s sorry, but <a href="https://www.youtube.com/watch?v=AZnt-0fEiT0"><i>you can't stop the beat</i></a>.</p>
+<p>Imagine a case where you have composed a groovy ‘60s dance hit in your sketch, and you send it to your friend Tracy. Tracy opens up your sketch and turns it on, enjoying the music until she is rudely interrupted by the Fun Police, who remind her that <i>this is a library and you can't play music here</i>. The volume buttons on Tracy’s laptop are broken, and the strange flavor of Linux she uses doesn’t have a sound control panel. She tries to pause the music, but to her dismay she realizes that this isn’t possible because all the notes have already been scheduled to occur the moment she started the sketch. Ashamed, she hangs her head and tells them that she’s sorry, but <a href="https://www.youtube.com/watch?v=AZnt-0fEiT0"><i>you can't stop the beat</i></a>.</p>
 
 <p>While your users may never face this exact situation, in many cases you might realize that you don’t actually want to schedule all notes right away, and in the case of interactive music we need to be able to alter, add and remove notes on the fly according to your interactions. To add this interactivity, we turn to our trusty ol’ SoundLoop.</p>
 
-<h3 id="sequence_of_notes">Playing A Sequence of Notes (Dynamic Scheduling)</h3>
+<h3 id="time_dynamic_scheduling">Playing A Sequence of Notes (Dynamic Scheduling)</h3>
 
-<p>Earlier, we touched briefly upon the usefulness of the SoundLoop without going into too much detail. Let's look a little more closely!</p>
+<p>In this section, we look at an alternative and more powerful way to play our sequence of notes, using the SoundLoop introduced briefly earlier. Let's begin by looking a little more closely at the SoundLoop at how it works!</p>
 
 <p>The SoundLoop provides users with a way to access the Web Audio Clock for accurate audio scheduling. Recall the example from before:</p>
 
@@ -318,7 +325,7 @@ function mySoundLoop(cycleStartTime) {
 <ol>
     <li>We need to instantiate a SoundLoop object.</li>
     <li>The SoundLoop constructor takes in two arguments: the callback function, and the loop interval.</li>
-    <li>The callback function is called regularly according to the chosen loop interval, and there is a cycleStartTime parameter passed into each callback, which we should use as a landmark to do our audio-scheduling against.</li>
+    <li>The callback function is called regularly according to the chosen loop interval, and there is a cycleStartTime parameter passed into each callback, which gives us the look-ahead time we can use to do precise scheduling.</li>
 </ol>
 
 <p>The concept of cycleStartTime deserves a bit more explanation, because it is tricky to understand at first. The cycleStartTime gives us the ideal time that the current cycle of the SoundLoop is <i>supposed to occur at</i>.</p>
@@ -351,7 +358,7 @@ function soundLoop(cycleStartTime) {
     <li>Use <i>time elapsed since the previous event</i> to denote temporal information instead of using <i>start time + duration</i>.</li>
 </ul>
 
-<p>Using this new representation, we can write out another sequence of notes - this time for Mary Had A Little Lamb (<i>surprise!</i> It's actually the same song as before):</p>
+<p>Using this new representation, we can rewrite the sequence of notes for Mary Had A Little Lamb:</p>
 
 <pre><code class="javascript">var song = [ 
   // pitch, velocity (between 0-1), time since previous event (beats), type (1:ON or 0:OFF)
@@ -397,17 +404,18 @@ function soundLoop(cycleStartTime) {
 }
 </code></pre>
 
-<p>Whew. That was a bit of effort just to play a couple of notes, wasn't it? But the important thing to realize is that this is a far more powerful way of playing notes than scheduling everything at once. When we use the SoundLoop, each note only gets scheduled when it is due to be played, which means that we have the power now to interact with the music and change it as it is being produced - and that is where all the fun begins.</p>
+<p>Whew. That was a bit of effort just to play a couple of notes, wasn't it? But the important thing to realize is that this is a far more powerful way of playing notes than scheduling everything at once. When we use the SoundLoop this way, scheduling one moment at the time, we have the power to interact with the music and change it as it is being produced - and that is where all the fun begins.</p>
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('array_of_notes_soundloop', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/array_of_notes_soundloop/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
     <div style="height: 40vh" id="array_of_notes_soundloop">
         <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>Playing a sequence of notes using a SoundLoop, which allows us to start, stop, and even alter playback (eg. changing tempo) as it happens.</p>
 </div>
 
-<h3 id="sequence_of_notes">Synchronizing Audio and Visuals</h3>
+<h3 id="time_audio_and_visuals">Synchronizing Audio and Visuals</h3>
 
 <p>The last topic we will look at in this tutorial is how to synchronize audio and visuals.</p>
 
@@ -415,9 +423,9 @@ function soundLoop(cycleStartTime) {
 
 <p>A pretty fun example of a visualization you could do is to visualize each note that your algorithm creates, by adding new components to the screen every time a note is struck.</p>
 
-<p>The first way we might think of doing this is to simply add drawing functions into your SoundLoop, but that tends to not work out so well because animations generally require a higher frame rate than the SoundLoop would need. Therefore, a better way is keep audio and visual components separate, using the SoundLoop for sound and the draw function for visuals. Then to synchronize between the two loops, there will often need to be some global program states which the two loops interact with to pass information back and forth.</p>
+<p>The first way we might think of doing this is to simply add drawing functions into your SoundLoop, but that tends to not work out so well because animations would generally run at a different frame rate than the SoundLoop. Therefore, a better way is keep audio and visual components separate, using the SoundLoop for sound and the draw function for visuals. Then to synchronize between the two loops, we will use a shared program state which the two loops interact with to pass information back and forth.</p>
 
-<p>In the following example, we have a ParticleSystem class (borrowed from the p5.js ParticleSystem example) which keeps track of individual Particles which each represent a note.</p> 
+<p>In the following example, we have a ParticleSystem class (borrowed from the <a href="https://p5js.org/examples/simulate-particle-system.html">p5.js ParticleSystem example</a>) which keeps track of individual Particles, each representing a note.</p> 
 
 <p>In the SoundLoop, each time we play a new note we also add a new particle to the system:</p>
 
@@ -430,8 +438,8 @@ function soundLoop(cycleStartTime) {
   
   // Play sound
   var velocity = 1; // Between 0-1
-  quaverSeconds = this._convertNotation('8n'); // 8th note = quaver duration
-  synth.play(currentNote, velocity, cycleStartTime, quaverSeconds);
+  var duration = this.interval;
+  synth.play(currentNote, velocity, cycleStartTime, duration);
 
   // Add a particle to visualize the note
   var pitchClassIndex = pentatonic_scale.indexOf(pitchClass);
@@ -458,13 +466,14 @@ function draw() {
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('visualize_pentatonic', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/visualize_pentatonic/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
     <div style="height: 60vh" id="visualize_pentatonic">
         <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
 </div>
 
-<h3 id="sequence_of_notes">Extra Credit: Step Sequencer</h3>
+<h3 id="time_sequencer">Extra Credit: Step Sequencer</h3>
 
 <p>Using all of the concepts that we have learned, we now have what it takes to build something practical: A step sequencer. Step sequencers are a relatively modern kind of musical instrument used by electronic musicians to easily create beats and melodic patterns.</p>
 
@@ -472,13 +481,14 @@ function draw() {
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('grid_sequencer', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/grid_sequencer/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
     <div style="height: 60vh" id="grid_sequencer">
         <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>A step sequencer. Click on the tiles to set/unset notes, and hit RUN to get the groove going!</p>
 </div>
 
-<h2 id="whats_next">What's Next?</h2>
+<h2 id="time_whats_next"><a href="#time_whats_next">What's Next?</a></h2>
 <hr style="width:200px" class="horizontal-line">
 <p>We've reached the end of this lesson, but don't stop here!</p>
 
@@ -489,18 +499,19 @@ function draw() {
 
 
 
-<div id="alg_comp_tab" class="tab_content">
+<div id="composition_tab" class="tab_content">
 
-<h1 id="alg_comp">Part 2: Algorithmic Composition</h1>
+<h1 id="algorithmic_composition">Part 2: Algorithmic Composition</h1>
 <hr style="width:200px" class="horizontal-line">
 
-<h2 id="building_blocks">The Building Blocks of Music</h2>
+<h2 id="composition_building_blocks">The Building Blocks of Music</h2>
 <hr style="width:200px" class="horizontal-line">
 
 <p>This is a note.</p>
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('this_is_a_note', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/this_is_a_note/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
     <div style="height: 50vh" id="this_is_a_note">
         <iframe src="empty_iframe.html"></iframe>
     </div>
@@ -515,12 +526,13 @@ function draw() {
 
 <p>Pitch names like “D#4” may be familiar to you depending on how comfortable you are with music theory, but if you don’t know your sharps from your flats, fret not! There is an alternate naming scheme called MIDI note numbers, which simply labels each standard frequency with a number which increases as the pitch gets higher.</p>
 
-<p>By using MIDI note numbers, we don't need to remember specific pitch frequencies or formulae; MIDI numbers also possess easy mathematical shortcuts as well - for example, to go up or down an octave we simply add 12 to the MIDI note!</p>
+<p>By using MIDI note numbers, we don't need to remember specific pitch frequencies or formulae; MIDI numbers also possess easy mathematical shortcuts - for example, to go up or down an octave we simply add 12 to the MIDI note!</p>
 
 <p>Easy, right?</p>
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('midi_note_numbers', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/midi_note_numbers/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
     <div style="height: 80vh" id="midi_note_numbers">
         <iframe src="empty_iframe.html"></iframe>
     </div>
@@ -547,8 +559,7 @@ function setup() {
 
 <p>And we can add more <code>synth.play()</code> functions to produce a series of notes that generate a song (see Part 1: About Time for a better way to do this):</p>
 
-<pre><code class="javascript">
-synth.play(midiToFreq(60), 1.0, 0, 1);
+<pre><code class="javascript">synth.play(midiToFreq(60), 1.0, 0, 1);
 synth.play(midiToFreq(62), 1.0, 1, 1);
 synth.play(midiToFreq(64), 1.0, 2.5, 1);
 synth.play(midiToFreq(65), 1.0, 5, 1);
@@ -559,10 +570,10 @@ synth.play(midiToFreq(65), 1.0, 5, 1);
 
 <p>It turns out, <i>yes we can</i>.</p>
 
-<h2 id="dice_music">Dice Music</h2>
+<h2 id="composition_dice">Dice Music</h2>
 <hr style="width:200px" class="horizontal-line">
 
-<p>An algorithm is a set of steps that can be followed to perform a certain task (a common analogy for this is a cooking recipe). In our case, we want to use algorithms which can be followed by a computer so that the computer may compose new music for us. However, algorithms are not limited only to computer programs, and humans have in fact been using algorithms to compose music for centuries!</p>
+<p>An algorithm is a set of steps and rules that can be followed to perform a certain task (a common analogy for this is a cooking recipe). In our case, we want to use algorithms which can be followed by a computer so that the computer may compose new music for us. However, algorithms are not limited only to computer programs, and humans have in fact been using algorithms to compose music for centuries!</p>
 
 <p>The <i>Musikalisches Würfelspiel</i> (German for “musical dice game”) was popular in the 18th century for adding an element of chance to music composition. Typically, composers would prepare a set of musical phrases and use a dice to randomly put them in sequence.</p>
 
@@ -580,22 +591,23 @@ synth.play(midiToFreq(65), 1.0, 5, 1);
     <li>Your song is done, enjoy the music!</li>
 </ol>
 
-<p>We can do something like this quite easily, by using p5 to randomly pick out a sequence of notes to construct a song. However, it turns out that randomly picking note pitches from anywhere in the spectrum sounds quite bad, and we can do better if we instead pick notes from a specific scale (subset of pitch classes).</p>
+<p>We can do something like this quite easily, by using p5 to randomly pick out a sequence of notes to construct a song. However, it turns out that randomly picking note pitches from anywhere in the spectrum does not sound very musical. We can get something that sounds more musical if we apply musical constraints to our algorithm, like picking notes from a specific scale (subset of pitch classes).</p>
 
 <p>In the example below, we use the Major Pentatonic scale, but there are a lot of different possible scales we can choose from (see <a href="https://gist.github.com/gleitz/6845751">gleitz’s gist</a> for a list of scales in convenient JavaScript array format), and depending on the context of your composition you may want a scale to help convey a specific mood.</p>
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('visualize_pentatonic_2', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/visualize_pentatonic_2/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
     <div style="height: 60vh" id="visualize_pentatonic_2">
         <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>An example of using randomness in music composition. Notes are produced randomly from the Major Pentatonic scale, but you can move your cursor around the sketch to transpose up and down octaves.</p>
 </div>
 
-<h2 id="dice_music">Fractal Music</h2>
+<h2 id="composition_fractal">Fractal Music</h2>
 <hr style="width:200px" class="horizontal-line">
 
-<p>The idea of fractals first emerged from the field of mathematics, describing a class of infinitely complicated objects possessing self-symmetry at different scales. This definition itself sounds infinitely complicated, but in fact it’s relatively easy to understand the basics (we leave the actual mathematics for another time!) once we look at some examples. </p>
+<p>The idea of fractals first emerged from the field of mathematics, describing a class of <i>infinitely complicated objects possessing self-symmetry at different scales</i>. This definition itself sounds infinitely complicated, but in fact it’s relatively easy to understand the basics (we leave the actual mathematics for another time!) once we look at some examples. </p>
 
 <p>Let’s go ahead and do that right away. Perhaps the most popular example of a fractal is the Mandelbrot set, from which the following visualization is produced:</p>
 
@@ -605,34 +617,34 @@ synth.play(midiToFreq(65), 1.0, 5, 1);
 
 <ul>
     <li><b>Infinitely complicated</b></br>Thankfully, this doesn’t mean that fractals are impossible to understand. What it actually means is that a fractal is an infinite object, which in our case we can think of fractals as something which can generate new musical content forever. How wonderful!</li>
-    <li><b>Self-symmetry</b></br>This is more easily seen than described: In the example of the animated visualization of the Mandelbrot set above, we see that the Mandelbrot set is actually self-similar in increasingly small scales, so that when you zoom in enough you eventually see the same patterns emerge.</li>
+    <li><b>Self-symmetry</b></br>This is more easily seen than described: In the example of the animated Mandelbrot visualization above, we see that the Mandelbrot set is actually self-similar in increasingly small scales, so that when you zoom in enough you eventually see the same patterns emerge.</li>
 </ul>
 
-<p>These two properties of fractals tend to create interesting patterns, which makes them popular subjects for generating art. This more often tends to be visualizations of fractals than sonification (take a look at Dan Shiffman’s <a href="https://natureofcode.com/book/chapter-8-fractals/">excellent fractals lesson on The Nature of Code</a>), but we can just as well convert fractals to music, by mapping a fractal definition to musical information such as pitch, rhythm, or structure.</p>
+<p>These two properties of fractals tend to create interesting patterns, which makes them popular subjects for generating art. The most popular manifestation of fractal art are visualizations (take a look at Dan Shiffman’s <a href="https://natureofcode.com/book/chapter-8-fractals/">excellent fractals lesson on The Nature of Code</a>), but we can just as well convert fractals to music, by mapping a fractal definition to musical information such as pitch, rhythm, or structure.</p>
 
 <p>Let’s try to create our own fractal now!</p>
 
-<p>To generate fractals, we can use something called a Lindenmayer System, or L-System for short. Our L-System will require three things:</p>
+<p>There are a variety of methods we can use to generate fractals, but in this example we will focus on a particular grammar-based method called a Lindenmayer System, or L-System for short. Our L-System will require three things:</p>
 
 <ol>
-    <li>A set of valid symbols</li>
-    <li>A set of production rules of transforming each symbol into other symbols</li>
-    <li>An initial sequence of symbols to start from</li>
+    <li>A set of <b>valid symbols</b></li>
+    <li>A set of <b>production rules</b> of transforming each symbol into other symbols</li>
+    <li>An <b>initial sequence</b> of symbols to start from</li>
 </ol>
 
-<p>For simplicity, let’s say we use a C-major triad as our set of valid symbols. We would have:</p>
+<p>For simplicity, let’s say we use a C-major triad as our set of <b>valid symbols</b>. We would have:</p>
 
 <pre><code>Valid symbols: C, E, G
 </code></pre>
 
-<p>We then need to define our production rules to transform one symbol into a new symbol(s). For example, an arbitrary set of rules might be:</p>
+<p>We then need to define our <b>production rules</b> to transform one symbol into a new symbol(s). For example, an arbitrary set of rules might be:</p>
 
 <pre><code>C => G
 E => E, C
 G => C, G, E
 </code></pre>
 
-<p>And we decide to begin with just a single note, C. We then apply the following algorithm:</p>
+<p>Our <b>initial sequence</b> can be any of the valid symbols, even just a single C note. We then apply the following algorithm:</p>
 
 <ol>
     <li>Repeat for as many iterations as you like:
@@ -658,33 +670,121 @@ Iteration 5: C, G, E, G, C, G, E, E, C, E, C, G
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('fractal_music', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/fractal_music/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
     <div style="height: 50vh" id="fractal_music">
         <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
 </div>
 
-<h2 id="dice_music">Markov Music</h2>
+<h2 id="composition_genetic">Genetic Music</h2>
 <hr style="width:200px" class="horizontal-line">
+
+<p>Let’s now approach the problem from an entirely different perspective - from the perspective of evolutionary biology.</p>
+
+<p>Suppose we treat the problem of composing music as an evolutionary problem. We can imagine a fictional species of “Earworms”, creatures who are born with a song in their heart and live to sing their songs.</p>
+
+<div class="full-width">
+    <button class="iframe-button" onclick="startStopIframe('this_is_an_earworm', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/this_is_an_earworm/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
+    <div style="height: 30vh" id="this_is_an_earworm">
+        <iframe src="empty_iframe.html"></iframe>
+    </div>
+    <p>An Earworm is a fictional organism characterized by its "genetic song". Click on the Earworm to hear it sing!</p>
+</div>
+
+<p>However, not all Earworms are musically equal, and the ones who sing the best songs are also biologically “fitter”. Hence according to survival of the fittest, the Earworms with the best songs will survive and breed offspring for the next generation.</p>
+
+<p>The next generation of Earworms, having inherited genes from parents who were the fittest of their generation, will on average be fitter than the generation before them. Then, following the theory of evolution, each generation of Earworms will continue to get better and better at singing - and eventually we will have a whole population of Earworms to sing and give us solutions to our music composition tasks!</p>
+
+<p>So let’s outline the evolutionary process as an algorithm which we can write into a program:</p>
+
+<ol>
+    <li>Begin with an initial population of randomly generated Earworms</li>
+    <li>For as many generations as we like:
+        <ol>
+            <li><b>Survive.</b>
+                <ol>
+                    <li>Evaluate the <i>fitness</i> of all Earworms in terms of the quality of their songs.</li>
+                    <li>The fittest Earworms are chosen to survive from each generation</li>
+                </ol>
+            <li><b>Reproduce.</b>
+                <ol>
+                    <li>While the population size is smaller than our desired size, repeat:
+                        <ol>
+                            <li>A random pair of Earworms are chosen to produce offspring</li>
+                            <li>The songs of both parents are merged into a new song to be <i>inherited</i> by the offspring</li>
+                            <li>This new song undergoes <i>random mutation</i> to produce variation</li>
+                            <li>The new offspring is added to the population</li>            
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </li>
+</ol>
+
+<div class="full-width">
+    <button class="iframe-button" onclick="startStopIframe('genetic_music', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/genetic_music/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
+    <div style="height: 60vh" id="genetic_music">
+        <iframe src="empty_iframe.html"></iframe>
+    </div>
+    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
+</div>
+
+
+<h2 id="composition_markov">Markov Music</h2>
+<hr style="width:200px" class="horizontal-line">
+
+<p>At this point, you might be thinking to yourself: Hang on, didn’t we set out to make life easier for ourselves? It really doesn’t feel easier - sure, the computer will produce the notes but that’s only after I spent hours painstakingly crafting the perfect production rules or fitness function! Isn’t there an algorithm that can maybe listen to good music and teach itself how to play?</p>
+
+<p>As with most of the questions used to serve a point in this tutorial, the answer is <i>yes</i>.</p>
+
+<p>A Markov chain is one such algorithm which can learn from past experiences. In particular, Markov chains model sequences of states, looking at past sequences to predict future states. This sounds powerful, and in fact it is: Markov chains are used in text prediction, speech recognition, weather forecasting, financial modeling, and simulating natural phenomena like in weather forecasts or even DNA modeling.</p>
+
+<p>On top of that, they’re relatively straightforward and intuitive to understand.</p>
+
+<p>Let’s say we want to model Twinkle, Twinkle, Little Star. The MIDI notes for the song starting at Middle C (MIDI number 60) is:</p>
+
+<pre><code>60, 60, 64, 64, 67, 67, 64, rest, 65, 65, 64, 64, 62, 62, 60</code></pre>
+
+<p>To build our Markov chain, it helps to write out a transition table which lists all the transitions that each note has made in the past:</p>
+
+<pre><code>60: 60, 64
+62: 62, 60
+64: 64, 67, rest, 64, 62
+65: 65, 64
+67: 67, 64
+rest: 65
+</code></pre>
+
+<p>We can also illustrate this as a network of nodes (states) and edges (transitions between states), known in computer science-speak as a graph:</p>
+
+Diagram / sketch of graph
+
+<p>Now, when we want to predict the next note of a sequence, we simply look up our most recent note in the transition table and pick a random transition to one the possible next-states! For example, if we want to generate a new sequence beginning with 67, the next note that we choose could be either 67 again, or 64 (with equal probability). Then, we simply continue transition from state-to-state following the graph above, and can generate sequences for as long as we like.</p>
+
+<p>One problem with this current implementation though, is that we can only produce monophonic (single voice) music. To support polyphony, we need to change our data representation of each state from a single note with fixed duration, to each state being either a note-on or note-off event (like we saw previously in About Time). By using note-on and note-off events as states, we can have a chance of reaching multiple note-on states we have to turn the notes off, hence allowing multiple notes to sound at once.</p>
+
+<p>Let’s try to put all this into practice now!</p>
+
+<p>We’ll create an example which records what a user plays into a virtual piano, and uses that information to build a Markov chain on the fly. After recording, the Markov chain can generate new music by randomly traversing the graph.</p>
+
+<p>Each state in the Markov chain contains information about the pitch, event type (note-on or note-off), as well as time since the previous event. The code used to register the user’s input into these states is shown below:</p>
 
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('markov_music', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/markov_music/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
     <div style="height: 60vh" id="markov_music">
         <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
 </div>
 
-<h2 id="dice_music">Genetic Music</h2>
+<h2 id="composition_whats_next">What's Next?</h2>
 <hr style="width:200px" class="horizontal-line">
-
-<div class="full-width">
-    <button class="iframe-button" onclick="startStopIframe('genetic_music', this)">RUN</button>
-    <div style="height: 60vh" id="genetic_music">
-        <iframe src="empty_iframe.html"></iframe>
-    </div>
-    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
-</div>
+<p>We've reached the end of this lesson, but don't stop here!</p>
 
 </div>
 

@@ -87,7 +87,7 @@ function soundLoop(cycleStartTime) {
   }
   // Wait for the timeFromPrevEvent of the new node
   var duration = graph.nodes[latestNodeId].duration * secondsPerTick;
-  this.interval = duration;
+  this.interval = max(duration, 0.01); // Cannot have interval of exactly 0
 }
 
 function metronomeLoop(cycleStartTime) {

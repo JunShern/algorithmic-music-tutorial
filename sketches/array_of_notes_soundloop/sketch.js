@@ -58,12 +58,14 @@ function soundLoop(cycleStartTime) {
     var nextEvent = song[eventIndex];
     // This cycle will last for the time since previous event of the next event
     secondsPerBeat = 60 / beatsPerMinute;
-    this.interval = nextEvent.timeSincePrevEvent * secondsPerBeat;
+
+    var duration = nextEvent.timeSincePrevEvent * secondsPerBeat;
+    this.interval = max(duration, 0.01); // Cannot have interval of exactly 0
   }
 }
 
 function draw() {
-  background(0, 200, 200);
+  background(255, 220, 90);
   // Change beats-per-minute based on mouse speed
   beatsPerMinute = map(mouseX, 0, width, 60, 200);
   line(mouseX, 0, mouseX, height);

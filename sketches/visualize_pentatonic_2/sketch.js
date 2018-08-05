@@ -1,20 +1,19 @@
 var sloop;
 var pentatonic_scale = ['A','C','D','E','G'];
 var pitchClass_map = {'A':0,'C':1,'D':2,'E':3,'G':4};
-var numOctaves = 6;
+var numOctaves = 5;
 var baseOctave = 2;
 var heightLevel;
 var system;
 
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight);
+  createCanvas(windowWidth, windowHeight);
   // Particles to visualize notes
   system = new ParticleSystem(createVector(width/2, 50));
   // Create a synth to make sound with
   synth = new p5.PolySynth();
-  // Create SoundLoop with 8th-note-long loop interval
-  sloop = new p5.SoundLoop(soundLoop, "8n"); 
-  sloop.bpm = 80; // 80 beats per minute
+  // Create SoundLoop repeating every 0.3s
+  sloop = new p5.SoundLoop(soundLoop, 0.3);
 }
 
 function draw() {
@@ -40,8 +39,8 @@ function soundLoop(cycleStartTime) {
   var currentNote = pitchClass + str(octave);
   // Play sound
   var velocity = 1; // Between 0-1
-  quaverSeconds = this._convertNotation('8n'); // 8th note = quaver duration
-  synth.play(currentNote, velocity, cycleStartTime, quaverSeconds);
+  var duration = this.interval;
+  synth.play(currentNote, velocity, cycleStartTime, duration);
   // Add a particle to visualize the note
   var pitchClassIndex = pentatonic_scale.indexOf(pitchClass);
   var xpos = width / (pentatonic_scale.length * 2) + pitchClassIndex * width / pentatonic_scale.length;
@@ -82,7 +81,7 @@ Particle.prototype.update = function(){
 Particle.prototype.display = function() {
   noStroke();
   fill(this.color[0], this.color[1], this.color[2], this.lifespan);
-  ellipse(this.position.x, this.position.y, 12, 12);
+  ellipse(this.position.x, this.position.y, width/30, width/30);
 };
 
 // Is the particle still useful?

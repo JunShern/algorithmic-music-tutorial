@@ -118,6 +118,9 @@ button:active{
 button:focus {
     outline:0;
 }
+button.iframe-open {
+    background: cyan;
+}
 
 
 .fa {
@@ -170,8 +173,8 @@ h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-
 
 
 OL { counter-reset: item }
-OL LI { display: block }
-OL LI:before { content: counters(item, ".") " "; counter-increment: item }
+OL LI { display: block; line-height: 1.7em }
+OL LI:before { content: counters(item, ".") " "; counter-increment: item; color: grey; margin-right: 1em }
 
 /* Collapsible */
 .collapsible {
