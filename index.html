@@ -20,53 +20,52 @@
 
 <!-- Page Content -->
 <div id="main">
+
 <!-- Header/Home -->
 <header class="center" id="home">
     <div class="banner-container">
-        <iframe src="sketches/title/index.html" class="banner-iframe"></iframe>
+        <div id="title">
+            <iframe src="sketches/title/index.html" class="banner-iframe"></iframe>
+        </div>
         <div class="banner-text">
-            <h1 class="jumbo">Algorithmic Composition</h1>
-            <p>An interactive and explorable tutorial on algorithmic music composition with p5.js-sound.</p>
+            <h1 class="jumbo">Algorithmic Music Composition</h1>
+            <p>An interactive and explorable tutorial on algorithmic music composition with JavaScript and p5.js-sound.</p>
         </div>
     </div>
+
+    <button class="iframe-button" onclick="startStopIframe('title', this)">RUN</button>
 </header>
 
 <button class="collapsible">About</button>
 <div class="collapsible-content">
-    <p>Hello! You've found your way to the Pitchhiker's Guide to The Algorithm. guide to Algorithmic Composition. If you've ever bobbed your head or tapped your feet to a song, there's something here for you!</p>
-</div>
+    <p><i>Give a computer a song and you can dance for 5 minutes; teach a computer to write songs, and you can dance forever.</i></p>
 
+    <p>Welcome!</p>
+    
+    <p>In this tutorial, we're going to look at how to teach a computer to write songs so that we can dance forever.</p>
 
-<button class="collapsible">Prerequisites</button>
-<div class="collapsible-content">
-    <p>This tutorial is written with code examples in JavaScript, using the p5.js library. Basic knowledge of programming, including an understanding of classes, is assumed. If you can read this excerpt and understand what it does, you’re good to go!</p>
-<pre><code class="javascript">function Musician() {
-    this.songs = [];
-}
-Musician.prototype.learnSong = function(songTitle) {
-    this.songs.push(songTitle);
-};
-Musician.prototype.listSongs = function() {
-    console.log(&ldquo;I know how to play the following songs: &rdquo;);
-    for (var i=0; i&lt;this.songs.length; i++) {
-        console.log(this.songs[i]);
-    }
-};
+    <p>This tutorial is designed to have something for everyone, so even if you aren't personally planning to create an infinite jukebox and dance forever, please stick around to play with some of the interactive examples scattered across the website - who knows, you might have fun and even learn something new!</p>
 
-musicanA = new Musician();
-musicianA.learnSong(&ldquo;Wonderwall&rdquo;);
-musicianA.listSongs();          
-</code></pre>
-    <p>If the code snippet above looks like Greek to you, don’t worry! You can still read on and pick up the conceptual ideas behind the code, or better yet, you can <a href="https://www.w3schools.com/js/js_object_constructors.asp">brush up on your Greek</a>.</p>
+    <hr style="width:200px" class="horizontal-line">
+
+    <p>All of the examples and code in this tutorial were produced using JavaScript and p5.js, with the help of the p5.sound add-on library.</p>
+
+    <p><a href="https://p5js.org/">p5.js</a> is a JavaScript library that aims to make coding accessible for artists, designers, educators, and beginners, and reinterprets this for today's web.</p>
+
+    <p><a href="https://p5js.org/reference/#/libraries/p5.sound">p5.sound</a> extends p5 with Web Audio functionality including audio input, playback, analysis and synthesis. </p>
 </div>
 
 <button class="collapsible">Contents</button>
 <div class="collapsible-content">
-    <p>If the code and concepts in Part 1 sound like Greek to you, don’t worry! You might find Part 2 more approachable, since it focuses more on the ideas than the implementation. And then, hopefully if you find yourself sufficiently motivated by the examples, you can even <a href="https://www.w3schools.com/js/js_object_constructors.asp">brush up on your Greek</a>.</p>
+    <p>This tutorial is split into two parts, which do not necessarily need to be read in order:</p>
+    
+    <p>Part 1 deals with the technical details of programming using p5.js-sound, and is helpful for readers who are keen to implement their own interactive music applications. However, many of the examples would also be of interest to casual readers who are curious to understand what goes on under the hood!</p>
+
+    <p>In Part 2, the focus is on high-level concepts in algorithmic composition, and the goal is to introduce a variety of composition algorithms in a way that would be understandable by a general audience.</p>
     <ol>
-        <li><a>Part 1: About Time</a>
+        <li><a>Part 1: Notes On Time</a>
             <ol>
-                <li><a>The Problem</a></li>
+                <li><a>Background</a></li>
                 <li><a>The Solution</a></li>
                 <li><a>Time Management In Practice</a>
                     <ol>
@@ -85,21 +84,24 @@ musicianA.listSongs();
 </div>
 
 <nav>
-    <button class="nav-item" id="time_button" onclick="openPage('about_time_tab', this, 'about_time')">ABOUT TIME</button>
+    <button class="nav-item" id="time_button" onclick="openPage('notes_on_time_tab', this, 'notes_on_time')">NOTES ON TIME</button>
     <button class="nav-item" id="composition_button" onclick="openPage('composition_tab', this, 'algorithmic_composition')">ALGORITHMIC COMPOSITION</button>
 </nav>
 
 <div class="content">
 
-<div id="about_time_tab" class="tab_content">
-<h1 id="about_time">Part 1: About Time!</h1>
+<div id="notes_on_time_tab" class="tab_content">
+
+<h1 id="notes_on_time">Part 1: Notes On Time</h1>
 <hr style="width:200px" class="horizontal-line">
+
+<p>In this section, we're going to discuss a couple of notes on timing, and see how we can ensure that all our notes arrive on time.</p>
 
 <p>When dealing with musical applications, we need to pay special attention to the aspect of timing. More so than in other channels like visual information, humans are sensitive to sound - and can detect discrepancies at millisecond resolutions.</p>
 
 <p>This means that when developing music applications, we need to make sure that we can accurately schedule sounds when we want them to happen, and have the computer reliably play back those sounds when we expect them to.</p>
 
-<h2 id="time_problem">The Problem</h2>
+<h2 id="time_problem">Background</h2>
 <hr style="width:200px" class="horizontal-line">
 <p>A basic <a href="https://p5js.org/">p5.js</a> program (called a "sketch") generally has a <code>setup</code> function that runs once, and a <code>draw</code> loop that repeats at a certain frame rate.</p>
 
@@ -181,7 +183,7 @@ function mySoundLoop(cycleStartTime) {
 }
 </code></pre>
 
-<p>The SoundLoop introduces a couple of new concepts which we will go into much more detail on <a href="#dynamic_scheduling">later in this tutorial</a>, but for now, notice that in this case there is no more draw loop - the draw loop is optional if we are only using sound, but in many cases it will be useful to have both the SoundLoop and draw loop, to handle audio and visuals respectively.</p>
+<p>The SoundLoop introduces a couple of new concepts which we will explain <a href="#dynamic_scheduling">later in this tutorial</a>, but for now, notice that in this case there is no more draw loop - the draw loop is optional if we are only using sound, but in many cases it will be useful to have both the SoundLoop and draw loop, to handle audio and visuals respectively.</p>
 
 <p>To convince ourselves that the SoundLoop is better for scheduling audio, let's compare the two approaches by listening to both metronomes together in the same sketch:</p>
 
@@ -201,7 +203,7 @@ function mySoundLoop(cycleStartTime) {
 <hr style="width:200px" class="horizontal-line">
 <p>So now, we have some inkling of how to build p5.js sketches with accurate timing information. But how do we go from our humble metronome to that supercalifabuloustic-interactive-musical-journey you have in your head?</p>
 
-<p>Perhaps the best way to answer this is to look at some best practices for different musical timing use cases.</p>
+<p>Perhaps the best way to answer this is to look at some examples and see how we might handle them.</p>
 
 <h3 id="time_instantaneous">Instantaneous Reaction</h3>
 
@@ -409,7 +411,7 @@ function soundLoop(cycleStartTime) {
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('array_of_notes_soundloop', this)">RUN</button>
     <button class="iframe-open" onclick="window.open('sketches/array_of_notes_soundloop/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
-    <div style="height: 40vh" id="array_of_notes_soundloop">
+    <div style="height: 30vh" id="array_of_notes_soundloop">
         <iframe src="empty_iframe.html"></iframe>
     </div>
     <p>Playing a sequence of notes using a SoundLoop, which allows us to start, stop, and even alter playback (eg. changing tempo) as it happens.</p>
@@ -419,18 +421,17 @@ function soundLoop(cycleStartTime) {
 
 <p>The last topic we will look at in this tutorial is how to synchronize audio and visuals.</p>
 
-<p>One of the really exciting things about working with JavaScript and in particular, p5.js, is that you have a wealth of features to play with. Even if the focus of your sketch is on musical content, it often augments the experience of your users when you add a visual component to complement the sounds you create.</p>
+<p>One of the really exciting things about working with p5.js is that you have a wealth of features to play with. Even if the focus of your sketch is on musical content, it often augments the experience of your users when you add a visual component to complement the sounds you create.</p>
 
 <p>A pretty fun example of a visualization you could do is to visualize each note that your algorithm creates, by adding new components to the screen every time a note is struck.</p>
 
 <p>The first way we might think of doing this is to simply add drawing functions into your SoundLoop, but that tends to not work out so well because animations would generally run at a different frame rate than the SoundLoop. Therefore, a better way is keep audio and visual components separate, using the SoundLoop for sound and the draw function for visuals. Then to synchronize between the two loops, we will use a shared program state which the two loops interact with to pass information back and forth.</p>
 
-<p>In the following example, we have a ParticleSystem class (borrowed from the <a href="https://p5js.org/examples/simulate-particle-system.html">p5.js ParticleSystem example</a>) which keeps track of individual Particles, each representing a note.</p> 
+<p>In the following example, we have a ParticleSystem class (borrowed from the p5.js <a href="https://p5js.org/examples/simulate-particle-system.html">ParticleSystem example</a>) which keeps track of individual Particles, each representing a note.</p> 
 
 <p>In the SoundLoop, each time we play a new note we also add a new particle to the system:</p>
 
-<pre><code class="javascript">
-function soundLoop(cycleStartTime) {
+<pre><code class="javascript">function soundLoop(cycleStartTime) {
   // Pick a random note, note octave based on mouse height
   var pitchClass = random(pentatonic_scale);
   var octave = baseOctave + heightLevel;
@@ -451,8 +452,7 @@ function soundLoop(cycleStartTime) {
 
 <p>In the draw function, all we need is a single call to run the system (which takes care of updating the particle positions and drawing the particles):</p>
 
-<pre><code class="javascript">
-function draw() {
+<pre><code class="javascript">function draw() {
   // ... Omitted
 
   // Update particle system
@@ -485,14 +485,14 @@ function draw() {
     <div style="height: 60vh" id="grid_sequencer">
         <iframe src="empty_iframe.html"></iframe>
     </div>
-    <p>A step sequencer. Click on the tiles to set/unset notes, and hit RUN to get the groove going!</p>
+    <p>A step sequencer. Click on the tiles to set/unset notes, and hit PLAY to get the groove going!</p>
 </div>
 
 <h2 id="time_whats_next"><a href="#time_whats_next">What's Next?</a></h2>
 <hr style="width:200px" class="horizontal-line">
 <p>We've reached the end of this lesson, but don't stop here!</p>
 
-<p>Grab a coffee, take a break, and come back for Part 2 of this tutorial series, where we'll explore cool ideas and groovy examples from the world of algorithmic composition!</p>
+<p>Grab a coffee, take a break, and come back for <a href="#algorithmic_composition">Part 2</a> of this tutorial series, where we'll explore cool ideas and groovy examples from the world of algorithmic composition!</p>
 
 </div>
 
@@ -503,6 +503,10 @@ function draw() {
 
 <h1 id="algorithmic_composition">Part 2: Algorithmic Composition</h1>
 <hr style="width:200px" class="horizontal-line">
+
+<p>Algorithmic Music Composition is an active field of research which marries the fields of computer science and music composition to design computer systems that compose music.</p>
+    
+<p>The applications of algorithmic music are wide-ranging, and as you will see throughout the examples in this tutorial, having a computer that composes music doesn't mean that humans are left out of the process! Instead, by keeping our eyes, ears and minds open as we tumble from one experiment to the next, we discover new ways to appreciate music, new ways of interacting with music, and new ways to be creative.</p>
 
 <h2 id="composition_building_blocks">The Building Blocks of Music</h2>
 <hr style="width:200px" class="horizontal-line">
@@ -681,7 +685,7 @@ Iteration 4: C, G, A, C, G, E, G, E, E, F, C
     <div style="height: 50vh" id="fractal_music">
         <iframe src="empty_iframe.html"></iframe>
     </div>
-    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
+    <p>An L-system is a system for generating fractals by using a set of production rules to transform strings of valid symbols into other valid symbols. Click on the STEP button to advance the algorithm one note at a time, or press PLAY to keep running!</p>
 </div>
 
 <h2 id="composition_genetic">Genetic Music</h2>
@@ -731,13 +735,15 @@ Iteration 4: C, G, A, C, G, E, G, E, E, F, C
     </li>
 </ol>
 
+<p>Using this algorithm, we can write a program to simulate the evolution of random populations of Earworms!</p>
+
 <div class="full-width">
     <button class="iframe-button" onclick="startStopIframe('genetic_music', this)">RUN</button>
     <button class="iframe-open" onclick="window.open('sketches/genetic_music/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
     <div style="height: 60vh" id="genetic_music">
         <iframe src="empty_iframe.html"></iframe>
     </div>
-    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
+    <p>Genetic algorithms are inspired by evolutionary biology. Use the buttons to see if you can breed a generation of Earworms that truly stick in a listener's head!</p>
 </div>
 
 
@@ -770,9 +776,9 @@ Rest: 65
 
 <img src="markov_graph.svg" alt="Diagram of Markov chain.">
 
-<p>When we want to predict the next note of a sequence, we simply look up our most recent note in the transition table and pick a random transition to one the possible next-states! For example, if we want to generate a new sequence beginning with 67, the next note that we choose could be either 67 again, or 64 (with equal probability). Then, we simply continue transition from state-to-state following the graph above, and can generate sequences for as long as we like.</p>
+<p>When we want to predict the next note of a sequence, we simply look up our most recent note in the transition table and pick a random transition to one of the possible next-states! For example, if we want to generate a new sequence beginning with 67, the next note that we choose could be either 67 again, or 64 (with equal probability). Then, we simply continue transition from state-to-state following the graph above, and can generate sequences for as long as we like.</p>
 
-<p>One problem with this current implementation though, is that we can only produce monophonic (single voice) music. To support polyphony, we need to change our data representation of each state from a single note with fixed duration, to each state being either a note-on or note-off event (like we saw previously in About Time). By using note-on and note-off events as states, we can have a chance of reaching multiple note-on states we have to turn the notes off, hence allowing multiple notes to sound at once.</p>
+<p>One problem with this current implementation though, is that we can only produce monophonic (single voice) music. To support polyphony, we need to change our data representation of each state from a single note with fixed duration, to each state being either a note-on or note-off event (like we saw previously in <a href="#time_dynamic_scheduling">Part 1</a>). By using note-on and note-off events as states, we can have a chance of reaching multiple note-on states we have to turn the notes off, hence allowing multiple notes to sound at once.</p>
 
 <p>Let’s try to put all this into practice now!</p>
 
@@ -843,7 +849,7 @@ function keyReleased() {
     <div style="height: 60vh" id="markov_music">
         <iframe src="empty_iframe.html"></iframe>
     </div>
-    <p>A simple interactive program demonstrating audio and visuals occuring in sync. Notes are produced randomly, but you can move your cursor around the sketch to transpose up and down octaves.</p>
+    <p>A Markov chain learns from past information to predict or compose new sequences. Start by playing ASDFGHJKL on the keyboard, then press PLAY to let the Markov chain imitate your style!</p>
 </div>
 
 <h2 id="composition_whats_next">What's Next?</h2>
@@ -854,7 +860,9 @@ function keyReleased() {
 
 <!-- Footer -->
 <footer class="content">
-<p>Created by <a href="https://github.com/JunShern/">junshern</a> as a 2018 <a href="https://summerofcode.withgoogle.com/">Google Summer of Code</a> project for the <a href="https://processingfoundation.org/">Processing Foundation</a>.</p>
+<p>Created by <a href="https://github.com/JunShern/">junshern</a> as a 2018 <a href="https://summerofcode.withgoogle.com/">Google Summer of Code</a> project for the <a href="https://processingfoundation.org/">Processing Foundation</a>. Special thanks to <a href="http://www.jasonsigal.cc/">Jason Sigal</a> for feedback and guidance on the development of this tutorial and its accompanying examples.</p>
+
+<p>Found a bug? File an issue on <a href="https://github.com/JunShern/explorable-algcomp">GitHub</a>.</p>
 <!-- End footer -->
 </footer>
 

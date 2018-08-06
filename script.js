@@ -45,7 +45,9 @@ function startStopIframe(sketchId, buttonElement) {
             iframe_buttons[i].style.backgroundColor = 'greenyellow';
         }
         // Revive only this one
-        document.getElementById(sketchId).querySelector('iframe').src = "sketches/" + sketchId + "/index.html";
+        var sketch_iframe = document.getElementById(sketchId).querySelector('iframe');
+        sketch_iframe.src = "sketches/" + sketchId + "/index.html";
+        sketch_iframe.contentWindow.focus();
         // Change button text
         buttonElement.innerHTML = 'STOP';
         buttonElement.style.backgroundColor = 'lightcoral';
@@ -60,15 +62,14 @@ function startStopIframe(sketchId, buttonElement) {
 document.addEventListener('DOMContentLoaded', function() {
     // Handle collapsibles
     var collapsibleDivs = document.getElementsByClassName("collapsible");
-    var i;
-    for (i = 0; i < collapsibleDivs.length; i++) {
+    for (var i = 0; i < collapsibleDivs.length; i++) {
         collapsibleDivs[i].addEventListener("click", function() {
             this.classList.toggle("active");
             var content = this.nextElementSibling;
             if (content.style.maxHeight){
-            content.style.maxHeight = null;
+                content.style.maxHeight = null;
             } else {
-            content.style.maxHeight = content.scrollHeight + "px";
+                content.style.maxHeight = content.scrollHeight + "px";
             }
         });
     }
@@ -79,8 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
         var elementWatcher = scrollMonitor.create(sketch_containers[i]);
         elementWatcher.fullyEnterViewport(function() {
             var div = this.watchItem;
-            var iframe = div.querySelector('iframe');
-            iframe.onload = function() { this.contentWindow.focus() };
             var button = div.querySelector('.iframe-button');
             button.click();
         });
@@ -90,6 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (window.location.hash.includes("composition")) {
         openPage("composition_tab", document.getElementById("composition_button"));
     } else {
-        openPage("about_time_tab", document.getElementById("time_button"));
+        openPage("notes_on_time_tab", document.getElementById("time_button"));
     }
 }, false);

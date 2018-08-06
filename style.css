@@ -86,6 +86,10 @@ iframe {
     pointer-events: none; /* So that we can interact with the canvas below */
 }
 
+nav {
+    padding-top: 1em;
+    background: #eee;
+}
 .nav-item {
     float: left;
     display: table-cell;
@@ -93,7 +97,7 @@ iframe {
 }
 button.nav-item {
     border: none;
-    border-top:0.3em solid black;
+    /* border-top:0.3em solid black; */
     background-color: "white";
 }
 button {
@@ -120,6 +124,11 @@ button:focus {
 }
 button.iframe-open {
     background: cyan;
+}
+header button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
 }
 
 
@@ -204,20 +213,24 @@ OL LI:before { content: counters(item, ".") " "; counter-increment: item; color:
     content: "\2212";
 }
 .collapsible-content {
+    max-width: 900px;
+    margin: auto;
     padding: 0 18px;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
-    background-color: #eee;
-}
-/* Code */
-pre {
-    border-left: solid 2px #ccc;
-    padding-left: 18px;
-    margin: 2em 0 2em -20px;
+    background-color: white;
 }
 code {
-    font-size: 90%;
+    font-size: 80%;
+}
+pre code {
+    background: rgb(247,247,247)!important;
+    border: 1px solid rgb(220,220,220);
+    border-radius: 5px;
+    margin: 2em 0px;
+    padding: 20px!important;
+    font-size: 80%;
 }
 
 
