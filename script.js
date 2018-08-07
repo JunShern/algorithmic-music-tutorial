@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var sketch_containers = document.querySelectorAll('.full-width');
     for (var i=0; i<sketch_containers.length; i++) {
         var elementWatcher = scrollMonitor.create(sketch_containers[i]);
-        elementWatcher.fullyEnterViewport(function() {
+        elementWatcher.enterViewport(function() {
             var div = this.watchItem;
             var button = div.querySelector('.iframe-button');
             button.click();
