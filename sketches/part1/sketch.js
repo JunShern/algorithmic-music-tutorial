@@ -8,7 +8,7 @@ let ydirArray = [];
 function setup() {
   createCanvas(windowWidth, windowHeight);
   NUM_DOTS = width * height / 6000;
-  LINK_THRESHOLD = width * height / 10000;
+  LINK_THRESHOLD = max(width * height / 10000, 50);
   // Populate all arrays
   for (let i = 0; i < NUM_DOTS; i++) {
     xposArray.push(random(width));

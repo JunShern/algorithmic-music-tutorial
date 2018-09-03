@@ -20,16 +20,17 @@ h1,h2,h3,h4,h5,h6 {
     font-family: "PT Serif", serif;
     font-weight: 400;
 }
-.w3-row-padding img {
-    margin-bottom: 12px
-}
 
-.prerequisites-panel {
-    background-color: #f1f1f1;
-    padding: 15px;
+.content {
+    max-width: 900px;
+    margin: auto;
+    padding-top: 3em; /* The nav bar sits in this empty space */
+    padding-bottom: 12px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
-.prerequisites-panel h4 {
-    padding: 0;
+.content h1, .content h2 {
+    padding-top: 64px;
 }
 
 .full-width {
@@ -69,6 +70,9 @@ iframe {
     position: relative;
     height: 25vh;
 }
+.content .part-div {
+    height: 30vh;
+}
 .banner-text {
     text-align: left;
     position: absolute;
@@ -83,6 +87,9 @@ iframe {
 .banner-text a {
     color: white;
 }
+.banner-text h2 {
+    padding-top: 0;
+}
 
 nav {
     display: table;
@@ -90,7 +97,7 @@ nav {
     position: fixed;
     z-index: 100;
     /* font-weight: bold; */
-    background: rgba(58, 51, 53, 0.9);
+    background: rgba(40, 40, 40, 0.9);
     width: 100%;
     height: 3em;
     padding: 0px;
@@ -115,24 +122,22 @@ button.nav-item {
     /* border-top:0.3em solid black; */
     background-color: "white";
 }
-.button-div {
-    cursor: pointer;
-    border: 0.2em solid black;
+button {
+    /* cursor: pointer; */
+    border: 0.2em solid white;
     padding:1em 3em;
     font-family:sans-serif;
     font-weight:800;
-    color:black;
+    color:rgba(0,0,0,0.8);
     text-align:center;
     transition: all 0.15s;
     background: greenyellow;
 }
 button:hover{
     color:rgba(50,50,50,0.7);
-    border-color:rgba(50,50,50,0.7);
 }
 button:active{
     color:rgba(50,50,50,0.7);
-    border-color:rgba(50,50,50,0.7);
 }
 button:focus {
     outline:0;
@@ -171,33 +176,18 @@ footer p {
     text-align: center!important;
     width: auto;
 }
-
-.content {
-    max-width: 900px;
-    margin: auto;
-    padding-top: 0; /* The nav bar sits in this empty space */
-    padding-bottom: 12px;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-/* h1,h2 {
-    padding-top: 64px;
-    color:#3a3a3a;
-}
-h3,h4,h5,h6 {
-    padding-top: 48px;
-    color:#3a3a3a;
-} */
 hr {
     border: 0;
     border-top: 2px solid #ddd;
     margin: 20px 0;
 }
-/* h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-size:18px}h6{font-size:16px} */
 /* END OF BORROWED STYLES */
 
 
-OL { counter-reset: item }
+OL { 
+    counter-reset: item;
+    -webkit-padding-start: 0.8em;
+}
 OL LI { display: block; line-height: 1.7em }
 OL LI:before { content: counters(item, ".") " "; counter-increment: item; color: grey; margin-right: 1em }
 
