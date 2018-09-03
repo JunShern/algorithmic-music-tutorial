@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Algorithmic Composition</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="script.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif|Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Highlight.js for syntax highlighting -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>    
+</head>
+
+<nav>
+    <div class="nav-item"><a href=".">HOME</a></div>
+    <div class="nav-item"><a href="part1.html">PART 1</a></div>
+    <div class="nav-item"><a href="part2.html">PART 2</a></div>
+</nav>
+
+<body>    
+<script src="lib/addons/scrollMonitor.js"></script>
+
+<div class="content">
+
+<div id="composition_tab" class="tab_content">
+
+<div class="part-div full-width" style="background-color: #042A2B">
+    <iframe src="sketches/part1/index.html" class="banner-iframe"></iframe>
+    <div class="banner-text">
+        <h2><a href="part1.html">Part 1: Algorithmic Composition</a></h2>
+        <p>How do computers compose music?</p>
+    </div>
+</div>
+
+
+<h1 id="algorithmic_composition">Part 1: Algorithmic Composition</h1>
+<hr style="width:200px" class="horizontal-line">
+
+<p>Algorithmic Music Composition is an active field of research which marries the fields of computer science and music composition to design computer systems that compose music.</p>
+    
+<p>The applications of algorithmic music are wide-ranging, and as you will see throughout the examples in this tutorial, having a computer that composes music doesn't mean that humans are left out of the process! Instead, by keeping our eyes, ears and minds open as we tumble from one experiment to the next, we discover new ways to appreciate music, new ways of interacting with music, and new ways to be creative.</p>
+
+<ol>
+    <li><a>Part 1: Notes On Time</a>
+        <ol>
+            <li><a>Background</a></li>
+            <li><a>The Solution</a></li>
+            <li><a>Time Management In Practice</a>
+                <ol>
+                    <li><a>Instantaneous Reaction</a></li>
+                    <li><a>Playing A Sequence of Notes (Static Scheduling)</a></li>
+                    <li><a>Playing A Sequence of Notes (Dynamic Scheduling)</a></li>
+                    <li><a>Synchronizing Audio and Visuals</a></li>
+                    <li><a>Extra Credit: Step Sequencer</a></li>
+                </ol>
+            </li>
+            <li><a>What's Next?</a></li>
+        </ol>
+    </li>
+    <li><a>Part 2: Algorithmic Composition</a></li>
+</ol>
+
+<h2 id="composition_building_blocks">The Building Blocks of Music</h2>
+<hr style="width:200px" class="horizontal-line">
+
+<p>This is a note.</p>
+
+<div class="sketch-container">
+    <button class="iframe-button" onclick="startStopIframe('this_is_a_note', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/this_is_a_note/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
+    <div style="height: 50vh" id="this_is_a_note">
+        <iframe src="empty_iframe.html"></iframe>
+    </div>
+    <p>Tap anywhere on the canvas to play a note! Horizontal position controls pitch, vertical position controls velocity.</p>
+</div>
+
+<p>Notes are characterized by their pitch, velocity and timing information.</p>
+
+<p><b>Musical pitch</b> refers to how high- or low-pitched the note sounds. This characteristic comes from the oscillating frequency of the sound wave producing that note.</p>
+
+<p>Frequency is a continuous value, which means that 440Hz and 440.00001Hz are both equally valid, and there are an infinite number of possible pitch frequencies. However, Western music typically restricts itself to a particular subset of standard pitch frequencies, and we give names to these standard frequencies such as “A3”, “C5”, “F#4” and so on.</p>
+
+<p>Pitch names like “D#4” may be familiar to you depending on how comfortable you are with music theory, but if you don’t know your sharps from your flats, fret not! There is an alternate naming scheme called MIDI note numbers, which simply labels each standard frequency with a number which increases as the pitch gets higher.</p>
+
+<p>By using MIDI note numbers, we don't need to remember specific pitch frequencies or formulae; MIDI numbers also possess easy mathematical shortcuts - for example, to go up or down an octave we simply add 12 to the MIDI note!</p>
+
+<p>Easy, right?</p>
+
+<div class="sketch-container">
+    <button class="iframe-button" onclick="startStopIframe('midi_note_numbers', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/midi_note_numbers/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
+    <div style="height: 80vh" id="midi_note_numbers">
+        <iframe src="empty_iframe.html"></iframe>
+    </div>
+    <p>MIDI note numbers make it easier for digital musicians to work with musical pitches. Try clicking on each of the notes to get a feel of how MIDI numbers affect pitch! (Depending on your speakers/headphones, certain low- or high-frequency pitches may not sound so clear. Notes around MIDI number 70 generally show up clearly on laptop speakers.)</p>
+</div>
+
+<p>The <b>velocity</b> of a note indicates how hard a note is struck. Primarily, this influences how loud the note is played, but depending on the implementation of your synthesizer’s instrument voice, velocity may also have an effect on timbre and other sound characteristics. For the purpose of this tutorial, we can simply think of velocity as the same thing as volume.</p>
+
+<p>The last bit, <b>timing information</b>, needs to include both the attack and release times for that particular note (which can equivalently be represented as onset time and duration). This timing information can be expressed in terms of seconds or in musical time, which uses fractions relative to a composer-defined beats per minute (BPM).</p>
+
+<p>With just these three simple properties, we actually have everything we need to get started making music. We can start with a single note:</p>
+
+<pre><code class="javascript">var synth;
+
+function setup() {
+  noCanvas();
+  synth = new p5.PolySynth();
+  var midiNoteNumber = 70;
+  var freq = midiToFreq(midiNoteNumber); // Convert MIDI note to frequency
+  // Play note number 70 with velocity 1, starting now, for a duration of 1s
+  synth.play(freq, 1.0, 0, 1);
+}
+</code></pre>
+
+<p>And we can add more <code>synth.play()</code> functions to produce a series of notes that generate a song (see Part 1: About Time for a better way to do this):</p>
+
+<pre><code class="javascript">synth.play(midiToFreq(60), 1.0, 0, 1);
+synth.play(midiToFreq(62), 1.0, 1, 1);
+synth.play(midiToFreq(64), 1.0, 2.5, 1);
+synth.play(midiToFreq(65), 1.0, 5, 1);
+// ... and so on
+</code></pre>
+
+<p>Which works, but it quickly becomes very tedious to type out every note one by one. In the age of computers and interactive programs, why should we do all the hard work? Can't we design computer programs that compose and play music for us?</p>
+
+<p>It turns out, <i>yes we can</i>.</p>
+
+<h2 id="composition_dice">Dice Music</h2>
+<hr style="width:200px" class="horizontal-line">
+
+<p>An algorithm is a set of steps and rules that can be followed to perform a certain task (a common analogy for this is a cooking recipe). In our case, we want to use algorithms which can be followed by a computer so that the computer may compose new music for us. However, algorithms are not limited only to computer programs, and humans have in fact been using algorithms to compose music for centuries!</p>
+
+<p>The <i>Musikalisches Würfelspiel</i> (German for “musical dice game”) was popular in the 18th century for adding an element of chance to music composition. Typically, composers would prepare a set of musical phrases and use a dice to randomly put them in sequence.</p>
+
+<p>In its simplest form, the algorithm might look something like this:</p>
+
+<ol>
+    <li>Prepare a palette of musical phrases or notes which we can choose from.</li>
+    <li>Start with an empty song.</li>
+    <li>If the song is shorter than your desired length:
+        <ol>
+            <li>Randomly select a piece of music from the palette, and add it to the song.</li>
+            <li>Repeat Step 3.</li>
+        </ol>
+    </li>
+    <li>Your song is done, enjoy the music!</li>
+</ol>
+
+<p>We can do something like this quite easily, by using p5 to randomly pick out a sequence of notes to construct a song. However, it turns out that randomly picking note pitches from anywhere in the spectrum does not sound very musical. We can get something that sounds more musical if we apply musical constraints to our algorithm, like picking notes from a specific scale (subset of pitch classes).</p>
+
+<p>In the example below, we use the Major Pentatonic scale by default, but depending on the context of your composition you may want a different scale to help convey a specific mood. Feel free to change the dropdown Select menu to try out different scales (borrowed from <a href="https://gist.github.com/gleitz/6845751">gleitz’s gist</a>)!</p>
+
+<div class="sketch-container">
+    <button class="iframe-button" onclick="startStopIframe('random_scales', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/random_scales/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
+    <div style="height: 60vh" id="random_scales">
+        <iframe src="empty_iframe.html"></iframe>
+    </div>
+    <p>An example of using randomness in music composition. Notes are produced randomly from whichever scale you choose, and you can move your cursor around the sketch to transpose up and down octaves.</p>
+</div>
+
+<h2 id="composition_fractal">Fractal Music</h2>
+<hr style="width:200px" class="horizontal-line">
+
+<p>The idea of fractals first emerged from the field of mathematics, describing a class of <i>infinitely complicated objects possessing self-symmetry at different scales</i>. This definition itself sounds infinitely complicated, but in fact it’s relatively easy to understand the basics (we leave the actual mathematics for another time!) once we look at some examples. </p>
+
+<p>Let’s go ahead and do that right away. Perhaps the most popular example of a fractal is the Mandelbrot set, from which the following visualization is produced:</p>
+
+<img src="mandelbrot.gif" alt="Animated GIF of Mandelbrot fractal.">
+
+<p>There are two main points of interest that we can pick out from the earlier definition:</p>
+
+<ul>
+    <li><b>Infinitely complicated</b></br>Thankfully, this doesn’t mean that fractals are impossible to understand. What it actually means is that a fractal is an infinite object, which in our case we can think of fractals as something which can generate new musical content forever. How wonderful!</li>
+    <li><b>Self-symmetry</b></br>This is more easily seen than described: In the example of the animated Mandelbrot visualization above, we see that the Mandelbrot set is actually self-similar in increasingly small scales, so that when you zoom in enough you eventually see the same patterns emerge.</li>
+</ul>
+
+<p>These two properties of fractals tend to create interesting patterns, which makes them popular subjects for generating art. The most popular manifestation of fractal art are visualizations (take a look at Dan Shiffman’s <a href="https://natureofcode.com/book/chapter-8-fractals/">excellent fractals lesson on The Nature of Code</a>), but we can just as well convert fractals to music, by mapping a fractal definition to musical information such as pitch, rhythm, or structure.</p>
+
+<p>Let’s try to create our own fractal now!</p>
+
+<p>There are a variety of methods we can use to generate fractals, but in this example we will focus on a particular grammar-based method called a Lindenmayer System, or L-System for short. Our L-System will require three things:</p>
+
+<ol>
+    <li>A set of <b>valid symbols</b></li>
+    <li>A set of <b>production rules</b> of transforming each symbol into other symbols</li>
+    <li>An <b>initial sequence</b> of symbols to start from</li>
+</ol>
+
+<p>For simplicity, let’s say we use a handful of notes from the C major scale as our set of <b>valid symbols</b>. Let's take:</p>
+
+<pre><code>Symbols: A, C, E, F, G
+</code></pre>
+
+<p>We then need to define our <b>production rules</b> to transform one symbol into a new symbol(s). For example, an arbitrary set of rules might be:</p>
+
+<pre><code>A => C, F, E
+C => G, E
+E => C, G
+F => A, C
+G => E, F, C
+</code></pre>
+
+<p>Our <b>initial sequence</b> can be any of the valid symbols, even just a single C note. We then apply the following algorithm:</p>
+
+<ol>
+    <li>Start with the initial sequence</li>
+    <li>Repeat for as many iterations as you like:
+        <ol>
+            <li>Begin a new empty sequence.</li>
+            <li>For each note in the previous sequence:
+                <ol>
+                    <li>Add the result of its production rule to the new sequence.</li>
+                </ol>
+            </li>
+        </ol>
+    </li>
+</ol>
+
+<p>Our current algorithm would result in the following:</p>
+
+<pre><code>Iteration 1: C
+Iteration 2: G, E
+Iteration 3: E, F, C, C, G
+Iteration 4: C, G, A, C, G, E, G, E, E, F, C
+… and so on.
+</code></pre>
+
+<p>Notice that our current strategy doesn't say anything about the durations of each note. It is entirely possible (and you should try this!) to come up with a fractal algorithm which generates timing and even velocity information as well, but for now we can quickly add some variety to our music by randomly assigning durations of either a whole-beat, half-beat, or quarter-beat to each note.</p>
+
+<p>Check out the sketch below to see our algorithm at work!</p>
+
+<div class="sketch-container">
+    <button class="iframe-button" onclick="startStopIframe('fractal_music', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/fractal_music/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
+    <div style="height: 50vh" id="fractal_music">
+        <iframe src="empty_iframe.html"></iframe>
+    </div>
+    <p>An L-system is a system for generating fractals by using a set of production rules to transform strings of valid symbols into other valid symbols. Click on the STEP button to advance the algorithm one note at a time, or press PLAY to keep running!</p>
+</div>
+
+<h2 id="composition_genetic">Genetic Music</h2>
+<hr style="width:200px" class="horizontal-line">
+
+<p>Let’s now approach the problem from an entirely different perspective - from the perspective of evolutionary biology.</p>
+
+<p>Suppose we treat the problem of composing music as an evolutionary problem. We can imagine a fictional species of “Earworms”, creatures who are born with a song in their heart and live to sing their songs.</p>
+
+<div class="sketch-container">
+    <button class="iframe-button" onclick="startStopIframe('this_is_an_earworm', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/this_is_an_earworm/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
+    <div style="height: 30vh" id="this_is_an_earworm">
+        <iframe src="empty_iframe.html"></iframe>
+    </div>
+    <p>An Earworm is a fictional organism characterized by its "genetic song". Click on the Earworm to hear it sing!</p>
+</div>
+
+<p>However, not all Earworms are musically equal, and the ones who sing the best songs are also biologically “fitter”. Hence according to survival of the fittest, the Earworms with the best songs will survive and breed offspring for the next generation.</p>
+
+<p>The next generation of Earworms, having inherited genes from parents who were the fittest of their generation, will on average be fitter than the generation before them. Then, following the theory of evolution, each generation of Earworms will continue to get better and better at singing - and eventually we will have a whole population of Earworms to sing and give us solutions to our music composition tasks!</p>
+
+<p>So let’s outline the evolutionary process as an algorithm which we can write into a program:</p>
+
+<ol>
+    <li>Begin with an initial population of randomly generated Earworms</li>
+    <li>For as many generations as we like:
+        <ol>
+            <li><b>Survive.</b>
+                <ol>
+                    <li>Evaluate the <i>fitness</i> of all Earworms in terms of the quality of their songs.</li>
+                    <li>The fittest Earworms are chosen to survive from each generation</li>
+                </ol>
+            <li><b>Reproduce.</b>
+                <ol>
+                    <li>While the population size is smaller than our desired size, repeat:
+                        <ol>
+                            <li>A random pair of Earworms are chosen to produce offspring</li>
+                            <li>The songs of both parents are merged into a new song to be <i>inherited</i> by the offspring</li>
+                            <li>This new song undergoes <i>random mutation</i> to produce variation</li>
+                            <li>The new offspring is added to the population</li>            
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </li>
+</ol>
+
+<p>Using this algorithm, we can write a program to simulate the evolution of random populations of Earworms!</p>
+
+<div class="sketch-container">
+    <button class="iframe-button" onclick="startStopIframe('genetic_music', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/genetic_music/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
+    <div style="height: 60vh" id="genetic_music">
+        <iframe src="empty_iframe.html"></iframe>
+    </div>
+    <p>Genetic algorithms are inspired by evolutionary biology. Use the buttons to see if you can breed a generation of Earworms that truly stick in a listener's head!</p>
+</div>
+
+
+<h2 id="composition_markov">Markov Music</h2>
+<hr style="width:200px" class="horizontal-line">
+
+<p>At this point, you might be thinking to yourself: Hang on, didn’t we set out to make life easier for ourselves? It really doesn’t feel easier - sure, the computer will produce the notes but that’s only after I spent hours painstakingly crafting the perfect production rules or fitness function! Isn’t there an algorithm that can maybe listen to good music and teach itself how to play?</p>
+
+<p>As with most of the questions used to serve a point in this tutorial, the answer is <i>yes</i>.</p>
+
+<p>A Markov chain is one such algorithm which can learn from past experiences. In particular, Markov chains model sequences of states, looking at past sequences to predict future states. This sounds powerful, and in fact it is: Markov chains are used in text prediction, speech recognition, weather forecasting, financial modeling, and simulating natural phenomena like in weather forecasts or even DNA modeling.</p>
+
+<p>On top of that, they’re relatively straightforward and intuitive to understand.</p>
+
+<p>Let’s say we want to model Twinkle, Twinkle, Little Star. The MIDI notes for the song starting at MIDI number 60 (Middle C) is:</p>
+
+<pre><code>60, 60, 64, 64, 67, 67, 64, Rest, 65, 65, 64, 64, 62, 62, 60</code></pre>
+
+<p>To build our Markov chain, it helps to write out a <b>transition table</b> which lists all the transitions that each note has made in the past:</p>
+
+<pre><code>60: 60, 64
+62: 62, 60
+64: 64, 67, rest, 64, 62
+65: 65, 64
+67: 67, 64
+Rest: 65
+</code></pre>
+
+<p>We can also illustrate this as a network of <b>nodes</b> (states) and <b>edges</b> (transitions between states), known in computer science-speak as a <a href="https://www.khanacademy.org/computing/computer-science/algorithms/graph-representation/a/describing-graphs">graph</a>:</p>
+
+<img src="markov_graph.svg" alt="Diagram of Markov chain.">
+
+<p>When we want to predict the next note of a sequence, we simply look up our most recent note in the transition table and pick a random transition to one of the possible next-states! For example, if we want to generate a new sequence beginning with 67, the next note that we choose could be either 67 again, or 64 (with equal probability). Then, we simply continue transition from state-to-state following the graph above, and can generate sequences for as long as we like.</p>
+
+<p>One problem with this current implementation though, is that we can only produce monophonic (single voice) music. To support polyphony, we need to change our data representation of each state from a single note with fixed duration, to each state being either a note-on or note-off event (like we saw previously in <a href="#time_dynamic_scheduling">Part 1</a>). By using note-on and note-off events as states, we can have a chance of reaching multiple note-on states we have to turn the notes off, hence allowing multiple notes to sound at once.</p>
+
+<p>Let’s try to put all this into practice now!</p>
+
+<p>We’ll create an example which records what a user plays through the keyboard, and uses that information to build a Markov chain on the fly.</p>
+
+<p>Each state in the Markov chain contains information about the pitch, event type (note-on or note-off), as well as time since the previous event. The code used to register the user’s input into these states is shown below:</p>
+
+<pre><code>function keyPressed() {
+  var keyIndex = keyOrder.indexOf(key);
+  // Check if valid note key pressed
+  if (keyIndex &gt;= 0) {
+    // Play synth
+    var midiNoteNumber = baseNote + keyScale[keyIndex]; // 0-127; 60 is Middle C (C4)
+    var freq = midiToFreq(midiNoteNumber);
+    synth.noteAttack(freq, velocity, 0);
+    // Register node
+    graph.registerNewNode(1, midiNoteNumber, ticksSincePrevEvent); //keyStates[keyIndex]);
+    // Activate key state
+    keyStates[keyIndex] = 1;
+  }
+  ticksSincePrevEvent = 0;
+}
+
+function keyReleased() {
+  var keyIndex = keyOrder.indexOf(key);
+  // Check if valid note key pressed
+  if (keyIndex &gt;= 0) {
+    // Stop synth
+    midiNoteNumber = baseNote + keyScale[keyIndex]; // 0-127; 60 is Middle C (C4)
+    freq = midiToFreq(midiNoteNumber);
+    synth.noteRelease(freq, 0);
+    // Register node
+    graph.registerNewNode(0, midiNoteNumber, ticksSincePrevEvent);
+    // Reset key state
+    keyStates[keyIndex] = 0;
+  }
+  ticksSincePrevEvent = 0;
+}
+</code></pre>
+
+<p>After recording, the Markov chain can generate new music by randomly traversing the graph:</p>
+
+<pre><code>function soundLoop(cycleStartTime) {
+  // Play the sound of this node
+  var midiNoteNumber = graph.nodes[latestNodeId].pitch;
+  var freq = midiToFreq(midiNoteNumber);
+  var type = graph.nodes[latestNodeId].type;
+  if (type == 1) {
+    synth.noteAttack(freq, velocity, cycleStartTime);
+  } else {
+    synth.noteRelease(freq, cycleStartTime);
+  }
+  // Transition to a random new node
+  if (graph.edges[latestNodeId].length) {
+    latestNodeId = random(graph.edges[latestNodeId]);
+  }
+  // Wait for the timeFromPrevEvent of the new node
+  var duration = graph.nodes[latestNodeId].duration * secondsPerTick;
+  this.interval = max(duration, 0.01); // Cannot have interval of exactly 0
+}
+</code></pre>
+
+<p>And that's about it! The full example is shown below:</p>
+
+<div class="sketch-container">
+    <button class="iframe-button" onclick="startStopIframe('markov_music', this)">RUN</button>
+    <button class="iframe-open" onclick="window.open('sketches/markov_music/index.html','_blank');" type="button">OPEN IN NEW TAB</button>
+    <div style="height: 60vh" id="markov_music">
+        <iframe src="empty_iframe.html"></iframe>
+    </div>
+    <p>A Markov chain learns from past information to predict or compose new sequences. Start by playing ASDFGHJKL on the keyboard, then press PLAY to let the Markov chain imitate your style!</p>
+</div>
+
+<h2 id="composition_whats_next">What's Next?</h2>
+<hr style="width:200px" class="horizontal-line">
+<p>We've reached the end of this lesson, but don't stop here!</p>
+
+</div>
+<!-- Footer -->
+<footer class="content">
+<p>Created by <a href="https://github.com/JunShern/">junshern</a> as a 2018 <a href="https://summerofcode.withgoogle.com/">Google Summer of Code</a> project for the <a href="https://processingfoundation.org/">Processing Foundation</a>. Special thanks to <a href="http://www.jasonsigal.cc/">Jason Sigal</a> for feedback and guidance on the development of this tutorial and its accompanying examples.</p>
+
+<p>Found a bug? File an issue on <a href="https://github.com/JunShern/explorable-algcomp">GitHub</a>.</p>
+<!-- End footer -->
+</footer>
+
+<!-- END PAGE CONTENT -->
+</div>
+
+</body>
+</html>

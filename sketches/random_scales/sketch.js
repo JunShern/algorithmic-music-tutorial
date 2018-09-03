@@ -1,10 +1,10 @@
 var sloop;
-var pentatonic_scale = ['A','C','D','E','G'];
-var pitchClass_map = {'A':0,'C':1,'D':2,'E':3,'G':4};
+var selectedScale = [0,2,4,5,7,9,11,12];
 var numOctaves = 5;
 var baseOctave = 2;
-var heightLevel;
+var octaveHeight = 0;
 var system;
+var selectInput;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -14,15 +14,24 @@ function setup() {
   synth = new p5.PolySynth();
   // Create SoundLoop repeating every 0.3s
   sloop = new p5.SoundLoop(soundLoop, 0.3);
+
+  // Scale selector
+  selectInput = createSelect();
+  selectInput.position(10, 10);
+  for (var scale in scales) {
+    selectInput.option(scale);
+  }
+  selectInput.changed(updateScale);
+  selectInput.value('pentatonic major');
 }
 
 function draw() {
   background(50);
   // Get mouse height level
   stroke(255, 100);
-  heightLevel = round(numOctaves * (height - mouseY) / height);
-  line(0, height - heightLevel*height/numOctaves, 
-    width, height - heightLevel*height/numOctaves);
+  octaveHeight = round(numOctaves * (height - mouseY) / height);
+  line(0, height - octaveHeight*height/numOctaves, 
+    width, height - octaveHeight*height/numOctaves);
   // Update particle system
   system.run();
   // Play/pause controls
@@ -34,17 +43,18 @@ function draw() {
 
 function soundLoop(cycleStartTime) {
   // Pick a random note, note octave based on mouse height
-  var pitchClass = random(pentatonic_scale);
-  var octave = baseOctave + heightLevel;
-  var currentNote = pitchClass + str(octave);
+  var pitchClass = random(selectedScale);
+  var baseNote = (baseOctave + octaveHeight) * 12;
+  var midiNote = baseNote + pitchClass;
+  var freq = midiToFreq(midiNote);
   // Play sound
   var velocity = 1; // Between 0-1
   var duration = this.interval;
-  synth.play(currentNote, velocity, cycleStartTime, duration);
+  synth.play(freq, velocity, cycleStartTime, duration);
   // Add a particle to visualize the note
-  var pitchClassIndex = pentatonic_scale.indexOf(pitchClass);
-  var xpos = width / (pentatonic_scale.length * 2) + pitchClassIndex * width / pentatonic_scale.length;
-  var ypos = height - heightLevel * height / numOctaves;
+  var pitchClassIndex = selectedScale.indexOf(pitchClass);
+  var xpos = width / (selectedScale.length * 2) + pitchClassIndex * width / selectedScale.length;
+  var ypos = height - octaveHeight * height / numOctaves;
   system.addParticle(xpos, ypos);
 }
 
@@ -54,6 +64,10 @@ function mouseClicked() {
   } else {
     sloop.start();
   }
+}
+
+function updateScale() {
+  selectedScale = scales[selectInput.value()];
 }
 
 // A simple Particle class

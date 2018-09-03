@@ -6,11 +6,12 @@ var synth;
 var sloop;
 
 var validNotes = [...Array(128).keys()];
+var validTokens = validNotes.concat([-1]);
 var minValidNote, maxValidNote;
 var songLength = 32; // 4 bars * 8th-note resolution
 
-var maxPopulationSize = 40;
-var numberOfSurvivors = 10;
+var maxPopulationSize = 70;
+var numberOfSurvivors = 20;
 var population = [];
 var generationCount = 1;
 
@@ -19,8 +20,8 @@ var clickedEarwormIndex;
 var notePlaybackIndex;
 // Fitness rules
 var desiredKeyClasses = [0,2,4,5,7,9,11];
-var minGoodPitch = 48;
-var maxGoodPitch = 72;
+var minGoodPitch = 60;
+var maxGoodPitch = 84;
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
@@ -59,11 +60,11 @@ function soundLoop(cycleStartTime) {
   var velocity = 0.7;
   var midiNote = population[clickedEarwormIndex].notes[notePlaybackIndex];
   var noteFreq = midiToFreq(midiNote);
-  synth.play(noteFreq, velocity, 0, duration);
+  synth.play(noteFreq, velocity, cycleStartTime, duration);
   // Move forward the index, and stop if we've reached the end
   notePlaybackIndex++;
   if (notePlaybackIndex >= population[clickedEarwormIndex].notes.length) {
-    this.stop();
+    this.stop(cycleStartTime);
     songIsPlaying = false;
   }
 }
@@ -95,6 +96,7 @@ function mousePressed() {
         clickedEarwormIndex = i;
         notePlaybackIndex = 0;
         songIsPlaying = true;
+        console.log(population[clickedEarwormIndex].notes);
         sloop.start();
       }
     }  
@@ -150,50 +152,23 @@ function Earworm(indexNumber) {
   this.id = indexNumber;
   this.length = songLength;
   this.notes = [];
+  this.fitnessScore = 0;
   // Visual properties
   this.xpos = random(width);
   this.ypos = random(height);
   this.radius = (width + height) / 50;
-  this.fitnessScore = 0;
 }
 Earworm.prototype.initialize = function() {
   this.notes = [];
   for (var i=0; i<this.length; i++) {
-    this.notes.push(random(validNotes));
+    var token = random(validTokens);
+    if (random(1) > 0.2) {
+      this.notes.push(random(validNotes));
+    } else {
+      this.notes.push(-1);
+    }
   }
   this.calculateFitness();
-};
-Earworm.prototype.display = function() {
-  this.xpos = constrain(this.xpos + random(-1, 1), 0, width);
-  this.ypos = constrain(this.ypos + random(-1, 1), 0, height);
-
-  push();
-  strokeWeight(1);
-  angleMode(DEGREES); // Change the mode to DEGREES
-  var angle = 360 / this.notes.length;
-  translate(this.xpos, this.ypos);
-  for (var i=0; i<this.notes.length; i++) {
-    var color = map(this.notes[i], minValidNote, maxValidNote, 280, 120) % 255;
-    var length = map(this.notes[i], minValidNote, maxValidNote, this.radius/2, this.radius);
-    strokeWeight(1);
-    stroke(color, 180, 250);
-    if (songIsPlaying) {
-      if (this.id == clickedEarwormIndex) {
-        stroke(color, 180, 250);
-        if (i == notePlaybackIndex) {
-          strokeWeight(2);
-          length = this.radius;
-        } else {
-          strokeWeight(1);
-        }
-      } else {
-        stroke(color, 100, 100);
-      }
-    }
-    rotate(angle);
-    line(0, 0, length, 0);
-  }
-  pop();
 };
 Earworm.prototype.calculateFitness = function() {
   this.fitnessScore = 0;
@@ -210,6 +185,16 @@ Earworm.prototype.calculateFitness = function() {
     var nextNote = this.notes[i+1];
     var interval = abs(nextNote - currentNote);
     this.fitnessScore = this.fitnessScore - interval;
+
+    // Consonant / dissonant intervals
+    // https://www.howmusicreallyworks.com/Pages_Chapter_4/4_2.html#4.2.6
+    var consonantIntervals = [3,4,5,7,8,9];
+    var dissonantIntervals = [1,2,6,10,11];
+    if (consonantIntervals.indexOf(interval)) {
+      this.fitnessScore = this.fitnessScore + 10;
+    } else if (dissonantIntervals.indexOf(interval)) {
+      this.fitnessScore = this.fitnessScore - 10;
+    }
   }
   // Pitch range
   for (var i=0; i<this.notes.length; i++) {
@@ -220,6 +205,16 @@ Earworm.prototype.calculateFitness = function() {
       this.fitnessScore = this.fitnessScore + 5;
     }
   }
+  // Good ratio of empty and non-empty notes
+  var empty = 0;
+  var targetEmptyRatio = 0.5;
+  for (var i=0; i<this.notes.length; i++) {
+    if (this.notes[i] === -1) {
+      empty++;
+    }
+  }
+  var emptyRatio = empty / (this.notes.length - empty);
+  this.fitnessScore = this.fitnessScore - (targetEmptyRatio - emptyRatio)*100;
 };
 Earworm.prototype.reproduceWith = function(partner) {
   var partitionIndex = round(random(this.notes.length));
@@ -234,7 +229,48 @@ Earworm.prototype.reproduceWith = function(partner) {
 Earworm.prototype.mutate = function() {
   for (var i=0; i<this.notes.length; i++) {
     if (random(100) > 80) {
-      this.notes[i] = random(validNotes);
+      // this.notes[i] = random(validTokens);
+      if (random(1) > 0.2) {
+        this.notes[i] = random(validNotes);
+      } else {
+        this.notes[i] = -1;
+      }
     }
   }
+};
+Earworm.prototype.display = function() {
+  this.xpos = constrain(this.xpos + random(-1, 1), 0, width);
+  this.ypos = constrain(this.ypos + random(-1, 1), 0, height);
+
+  push();
+  strokeWeight(1);
+  angleMode(DEGREES); // Change the mode to DEGREES
+  var angle = 360 / this.notes.length;
+  translate(this.xpos, this.ypos);
+  for (var i=0; i<this.notes.length; i++) {
+    rotate(angle);
+    if (this.notes[i] === -1) {
+      continue;
+    }
+    var pitchClass = this.notes[i] % 12;
+    var color = map(pitchClass, 0, 12, 280, 120) % 255;
+    var length = map(this.notes[i], minValidNote, maxValidNote, this.radius/2, this.radius);
+    strokeWeight(1);
+    stroke(color, 180, 250);
+    if (songIsPlaying) {
+      if (this.id == clickedEarwormIndex) {
+        stroke(color, 180, 250);
+        if (i == notePlaybackIndex) {
+          strokeWeight(2);
+          length = this.radius;
+        } else {
+          strokeWeight(1);
+        }
+      } else {
+        stroke(color, 100, 100);
+      }
+    }
+    line(0, 0, length, 0);
+  }
+  pop();
 };
