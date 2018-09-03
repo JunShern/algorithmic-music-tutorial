@@ -1,5 +1,5 @@
 var sloop;
-var bpm = 80; // 80 beats per minute
+var bpm = 140; // 140 beats per minute
 
 var numTimeSteps = 16;
 var timeStepCounter = 0;
