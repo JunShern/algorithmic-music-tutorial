@@ -1,2 +1,5 @@
-# explorable-algcomp
-Explorable tutorial for concepts in algorithmic music composition using p5.js-sound.
+# Algorithmic Music Composition
+
+An interactive and explorable tutorial on algorithmic music composition with JavaScript and p5.js-sound.
+
+Visit the [tutorial website](https://junshern.github.io/algorithmic-music-tutorial/)!
